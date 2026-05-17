@@ -23,6 +23,14 @@ $stmt_sites = $conexion->prepare($sql_sites);
 $stmt_sites->execute();
 
 $sites = $stmt_sites->fetchAll();
+
+// ----- Obtener negocios ---------
+$sql_business = "SELECT * FROm businesses ORDER BY name ASC";
+
+$stmt_business = $conexion->prepare($sql_business);
+$stmt_business->execute();
+
+$business = $stmt_business->fetchAll();
 ?>
 
 
@@ -43,6 +51,23 @@ $sites = $stmt_sites->fetchAll();
 
                 <select class="form-select">
                     <option>Todas las operaciones</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="filter-label">
+                    Negocio
+                </label>
+
+                <select class="form-select">
+                    <option value="">
+                        Todas los negocios
+                    </option>
+                    <?php foreach($business as $b): ?>
+                    <option value="<?php echo $b['id']; ?>">
+                        <?php echo $b['name']; ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -101,10 +126,22 @@ $sites = $stmt_sites->fetchAll();
                 Nueva Operacion
             </button>
 
-            <button class="btn btn-outline-warning"
+            <button class="btn btn-outline-success"
+            data-bs-toggle="modal"
+            data-bs-target="#createBusinessModal">
+                Nuevo Negocio
+            </button>
+
+            <button class="btn btn-outline-success"
             data-bs-toggle="modal"
             data-bs-target="#createSiteModal">
                 Nuevo Site
+            </button>
+
+            <button class="btn btn-outline-success"
+            data-bs-toggle="modal"
+            data-bs-target="#createProviderModal">
+                Nuevo Proveedor
             </button>
 
             <button class="btn btn-outline-danger">
@@ -165,7 +202,7 @@ $sites = $stmt_sites->fetchAll();
                 </button>
             </div>
 
-            <form action="../operations/store_operation.php" method="POST">
+            <form action="../../modules/store_operation.php" method="POST">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">
@@ -179,10 +216,15 @@ $sites = $stmt_sites->fetchAll();
                             Site
                         </label>
 
-                        <select name="site_id" class="form-select" required>
+                        <select name="site" class="form-select">
                             <option value="">
-                                Seleccionar
+                                Seleccionar site    
                             </option>
+                            <?php foreach($sites as $site): ?>
+                            <option value="<?php echo $site['id']; ?>">
+                                <?php echo $site['name']; ?>
+                            </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -191,10 +233,15 @@ $sites = $stmt_sites->fetchAll();
                             Negocio
                         </label>
                         
-                        <select name="business_id" class="form-select" required>
+                        <select name="business" class="form-select">
                             <option value="">
-                                Seleccionar
+                                Seleccionar Negocio
                             </option>
+                            <?php foreach($business as $b): ?>
+                            <option value="<?php echo $b['id']; ?>">
+                                <?php echo $b['name']; ?>
+                            </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 
@@ -236,6 +283,44 @@ $sites = $stmt_sites->fetchAll();
                             Nombre site
                         </label>
                         <input type="text" name="site" class="form-control" required>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+                <!-- MODAL NUEVO NEGOCIO -->
+
+<div class="modal fade" id="createBusinessModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Nuevo Negocio
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <form action="../../modules/store_business.php" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Nombre del Negocio
+                        </label>
+                        <input type="text" name="business" class="form-control" required>
                     </div>
                 </div>
             
