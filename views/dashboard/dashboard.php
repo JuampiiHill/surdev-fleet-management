@@ -8,13 +8,21 @@ $page_title = "Listado de equipos";
 include '../../includes/header.php';
 include '../../includes/sidebar.php';
 
-$sql = "SELECT * FROM equipments";
+// Obtener equipos
+$sql_eq = "SELECT * FROM equipments";
 
-$stmt = $conexion->prepare($sql);
-$stmt-> execute();
+$stmt_eq = $conexion->prepare($sql_eq);
+$stmt_eq-> execute();
 
-$equipments = $stmt->fetchAll();
+$equipments = $stmt_eq->fetchAll();
 
+// ----- Obtener sites ---------
+$sql_sites = "SELECT * FROm sites ORDER BY name ASC";
+
+$stmt_sites = $conexion->prepare($sql_sites);
+$stmt_sites->execute();
+
+$sites = $stmt_sites->fetchAll();
 ?>
 
 
@@ -44,7 +52,14 @@ $equipments = $stmt->fetchAll();
                 </label>
 
                 <select class="form-select">
-                    <option>Todos los sites</option>
+                    <option value="">
+                        Todas los sites
+                    </option>
+                    <?php foreach($sites as $site): ?>
+                    <option value="<?php echo $site['id']; ?>">
+                        <?php echo $site['name']; ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -86,7 +101,9 @@ $equipments = $stmt->fetchAll();
                 Nueva Operacion
             </button>
 
-            <button class="btn btn-outline-warning">
+            <button class="btn btn-outline-warning"
+            data-bs-toggle="modal"
+            data-bs-target="#createSiteModal">
                 Nuevo Site
             </button>
 
@@ -197,5 +214,44 @@ $equipments = $stmt->fetchAll();
     </div>
 </div>
                 </div>
+
+
+                <!-- MODAL NUEVO SITE -->
+
+<div class="modal fade" id="createSiteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Nuevo Site
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <form action="../../modules/store_site.php" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Nombre site
+                        </label>
+                        <input type="text" name="site" class="form-control" required>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
 
 <?php include '../../includes/footer.php';?>
