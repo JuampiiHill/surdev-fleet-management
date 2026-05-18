@@ -31,6 +31,14 @@ $stmt_business = $conexion->prepare($sql_business);
 $stmt_business->execute();
 
 $business = $stmt_business->fetchAll();
+
+// ----- Obtener proveedores ---------
+$sql_providers = "SELECT * FROM providers ORDER BY name ASC";
+
+$stmt_provider = $conexion->prepare($sql_providers);
+$stmt_provider->execute();
+
+$providers = $stmt_provider->fetchAll();
 ?>
 
 
@@ -94,7 +102,14 @@ $business = $stmt_business->fetchAll();
                 </label>
 
                 <select class="form-select">
-                    <option>Todos los proveedores</option>
+                    <option value="">
+                        Todas los sites
+                    </option>
+                    <?php foreach($providers as $p): ?>
+                    <option value="<?php echo $p['id']; ?>">
+                        <?php echo $p['name']; ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -159,7 +174,7 @@ $business = $stmt_business->fetchAll();
                     <th>Tipo</th>
                     <th>Modelo</th>
                     <th>Proveedor</th>
-                    <th>Anio</th>
+                    <th>Año</th>
                     <th>Hs Contratadas</th>
                     <th>Negocio</th>
                     <th>ID</th>
@@ -321,6 +336,44 @@ $business = $stmt_business->fetchAll();
                             Nombre del Negocio
                         </label>
                         <input type="text" name="business" class="form-control" required>
+                    </div>
+                </div>
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- MODAL NUEVO PROVEEDOR -->
+
+<div class="modal fade" id="createProviderModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Nuevo Proveedor
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <form action="../../modules/store_provider.php" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Nombre del Proveedor
+                        </label>
+                        <input type="text" name="provider" class="form-control" required>
                     </div>
                 </div>
             

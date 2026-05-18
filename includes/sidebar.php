@@ -39,28 +39,28 @@
 
         <li>
             <a href="#">
-                <i class="bi bi-tools"></i>
+                <i class="bi bi-people"></i>
                 Proveedores
             </a>
         </li>
 
         <li>
             <a href="#">
-                <i class="bi bi-tools"></i>
+                <i class="bi bi-clipboard-check"></i>
                 Ordenes
             </a>
         </li>
 
         <li>
             <a href="#">
-                <i class="bi bi-tools"></i>
+                <i class="bi bi-bar-chart"></i>
                 Reportes
             </a>
         </li>
 
         <li>
-            <a href="#">
-                <i class="bi bi-tools"></i>
+            <a href="../settings/settings.php">
+                <i class="bi bi-gear"></i>
                 Configuraciones
             </a>
         </li>

@@ -10,8 +10,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $site = $_POST['site'];
     $business = $_POST['business'];
 
-    echo $site, $business, $name;
-
     try{
 
         $sql = "SELECT * FROM operations
