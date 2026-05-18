@@ -9,6 +9,31 @@ $page_title = "Configuraciones";
 include '../../includes/header.php';
 include '../../includes/sidebar.php';
 
+// ----- Obtener sites ---------
+$sql_sites = "SELECT * FROM sites ORDER BY name ASC";
+
+$stmt_sites = $conexion->prepare($sql_sites);
+$stmt_sites->execute();
+
+$sites = $stmt_sites->fetchAll();
+
+// ----- Obtener negocios ---------
+$sql_business = "SELECT * FROM businesses ORDER BY name ASC";
+
+$stmt_business = $conexion->prepare($sql_business);
+$stmt_business->execute();
+
+$business = $stmt_business->fetchAll();
+
+//----- Obtener tipo de equipos ---------
+$sql_equipment_types = "SELECT * FROM equipments_types ORDER BY type ASC";
+
+$stmt_equipment_types = $conexion->prepare($sql_equipment_types);
+
+$stmt_equipment_types->execute();
+
+$equipment_types = $stmt_equipment_types->fetchAll();
+
 ?>
 
 <div class = "main-content">
@@ -27,7 +52,9 @@ include '../../includes/sidebar.php';
                 Agrega y administra operaciones del sistema.
             </p>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" 
+            data-bs-toggle="modal" 
+            data-bs-target="#createOperationModal">
                 Nueva operación
             </button>
         </div>
@@ -43,7 +70,9 @@ include '../../includes/sidebar.php';
                 Gestiona los sites operativos disponibles.
             </p>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#createSiteModal">
                 Nuevo site
             </button>
         </div>
@@ -59,7 +88,9 @@ include '../../includes/sidebar.php';
                 Administra proveedores y contratistas.
             </p>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#createProviderModal">
                 Nuevo proveedor
             </button>
         </div>
@@ -75,8 +106,10 @@ include '../../includes/sidebar.php';
                 Configura categorías de equipos industriales.
             </p>
 
-            <button class="btn btn-primary">
-                Nuevo tipo
+            <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#equipmentTypeModal">
+                Administrar tipos
             </button>
         </div>
 
@@ -99,3 +132,13 @@ include '../../includes/sidebar.php';
     </div>
 
 </div>
+
+<?php include '../../includes/modals/modal_operation.php'; ?>
+
+<?php include '../../includes/modals/modal_site.php'; ?>
+
+<?php include '../../includes/modals/modal_provider.php'; ?>
+
+<?php include '../../includes/modals/modal_equipment_type.php'; ?>
+
+<?php include '../../includes/footer.php'; ?>

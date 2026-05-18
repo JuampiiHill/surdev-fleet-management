@@ -39,6 +39,14 @@ $stmt_provider = $conexion->prepare($sql_providers);
 $stmt_provider->execute();
 
 $providers = $stmt_provider->fetchAll();
+
+// ----- Obtener operaciones ---------
+$sql_op = "SELECT * FROM operations ORDER BY name ASC";
+
+$stmt_op = $conexion->prepare($sql_op);
+$stmt_op->execute();
+
+$operations = $stmt_op->fetchAll();
 ?>
 
 
@@ -58,7 +66,14 @@ $providers = $stmt_provider->fetchAll();
                 </label>
 
                 <select class="form-select">
-                    <option>Todas las operaciones</option>
+                    <option value="">
+                        Todas los negocios
+                    </option>
+                    <?php foreach($operations as $op): ?>
+                    <option value="<?php echo $op['id']; ?>">
+                        <?php echo $op['name']; ?>
+                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -135,30 +150,6 @@ $providers = $stmt_provider->fetchAll();
                 Nuevo equipo
             </button>
 
-            <button class="btn btn-outline-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createOperationModal">
-                Nueva Operacion
-            </button>
-
-            <button class="btn btn-outline-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createBusinessModal">
-                Nuevo Negocio
-            </button>
-
-            <button class="btn btn-outline-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createSiteModal">
-                Nuevo Site
-            </button>
-
-            <button class="btn btn-outline-success"
-            data-bs-toggle="modal"
-            data-bs-target="#createProviderModal">
-                Nuevo Proveedor
-            </button>
-
             <button class="btn btn-outline-danger">
                 Indisponibilidad
             </button>
@@ -204,192 +195,10 @@ $providers = $stmt_provider->fetchAll();
     </div>
 </div>
 
-<!-- MODAL NUEVA OPERACION -->
+<?php include '../../includes/modals/modal_operation.php'; ?>
 
-<div class="modal fade" id="createOperationModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Nueva Operacion
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
+<?php include '../../includes/modals/modal_site.php'; ?>
 
-            <form action="../../modules/store_operation.php" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Nombre operacion
-                        </label>
-                        <input type="text" name="name" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Site
-                        </label>
-
-                        <select name="site" class="form-select">
-                            <option value="">
-                                Seleccionar site    
-                            </option>
-                            <?php foreach($sites as $site): ?>
-                            <option value="<?php echo $site['id']; ?>">
-                                <?php echo $site['name']; ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Negocio
-                        </label>
-                        
-                        <select name="business" class="form-select">
-                            <option value="">
-                                Seleccionar Negocio
-                            </option>
-                            <?php foreach($business as $b): ?>
-                            <option value="<?php echo $b['id']; ?>">
-                                <?php echo $b['name']; ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                </div>
-            
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="btn btn-primary">
-                        Guardar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-                </div>
-
-
-                <!-- MODAL NUEVO SITE -->
-
-<div class="modal fade" id="createSiteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Nuevo Site
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
-
-            <form action="../../modules/store_site.php" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Nombre site
-                        </label>
-                        <input type="text" name="site" class="form-control" required>
-                    </div>
-                </div>
-            
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="btn btn-primary">
-                        Guardar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-</div>
-
-                <!-- MODAL NUEVO NEGOCIO -->
-
-<div class="modal fade" id="createBusinessModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Nuevo Negocio
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
-
-            <form action="../../modules/store_business.php" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Nombre del Negocio
-                        </label>
-                        <input type="text" name="business" class="form-control" required>
-                    </div>
-                </div>
-            
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="btn btn-primary">
-                        Guardar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-</div>
-
-<!-- MODAL NUEVO PROVEEDOR -->
-
-<div class="modal fade" id="createProviderModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">
-                    Nuevo Proveedor
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
-
-            <form action="../../modules/store_provider.php" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Nombre del Proveedor
-                        </label>
-                        <input type="text" name="provider" class="form-control" required>
-                    </div>
-                </div>
-            
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="btn btn-primary">
-                        Guardar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-</div>
+<?php include '../../includes/modals/modal_provider.php'; ?>
 
 <?php include '../../includes/footer.php';?>
