@@ -174,23 +174,43 @@ $operations = $stmt_op->fetchAll();
             </thead>
 
             <tbody>
-                <?php foreach($equipments as $equipment): ?>
+                <td>Jaguar</td>
+                <td>Autoelevador</td>
+                <td>8FG25</td>
+                <td>Montacargas SRL</td>
+                <td>2026</td>
+                <td>250</td>
+                <td>Consumo Masivo</td>
+                <td>5511</td>
+                <td>$ 1.932.134,74</td>
+
+                <tr>
+                    <td>Jaguar</td>
+                    <td>Zorra HB</td>
+                    <td>LPE200</td>
+                    <td>Logística del Sur</td>
+                    <td>2025</td>
+                    <td>250</td>
+                    <td>Consumo Masivo</td>
+                    <td>EQ001</td>
+                    <td>$ 932.134,74</td>
+                </tr>
+                <!-- <?php foreach($equipments as $equipment): ?>
 
                 <tr onclick="window.location.href='../equipments/equipment_detail.php?id=<?php echo $equipment['id']; ?>'">
-                    <td>Makro</td>
-                        <td>
-                            <?php echo $equipment['model']; ?>
-                        </td>
-                        <td>
-                            <?php echo $equipment['year']; ?>            
-                        </td>
-                        <td>
-                            <?php echo $equipment['id']; ?>
-                        </td>
+                    <td>
+                        <?php echo $equipment['model']; ?>
+                    </td>
+                    <td>
+                        <?php echo $equipment['year']; ?>            
+                    </td>
+                    <td>
+                        <?php echo $equipment['id']; ?>
+                    </td>
                 </tr>
-                <?php endforeach; ?>                    
+                <?php endforeach; ?> -->         
 
-                </tbody>
+            </tbody>
         </table>
     </div>
 </div>

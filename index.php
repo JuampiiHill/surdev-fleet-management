@@ -1,6 +1,6 @@
 <?php include 'includes/header.php'; ?>
 
-<nav class="navbar navbar-expand-lg bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg bg-white border-bottom">
     <div class="container">
 
         <a class="navbar-brand fw-bold" href="#">
@@ -18,11 +18,11 @@
     </div>
 </nav>
 
-<section class="container py-5">
+<section class="container hero-section">
 
     <div class="row align-items-center">
 
-        <div class="col-md-6">
+        <div class="col-md-6 hero-text">
 
             <h1 class="display-4 fw-bold">
                 Gestión inteligente de flota industrial
@@ -44,13 +44,17 @@
 
         </div>
 
-        <div class="col-md-6 text-center">
+        <div class="col-md-6 d-flex justify-content-center">
 
-            <img 
-                src="assets/img/forklift.png"
-                class="img-fluid"
-                width="450"
-            >
+            <div class="hero-image-wrapper">
+
+                <img 
+                    src="assets/img/forklift.png"
+                    class="hero-image"
+                    alt="Sistema de gestión industrial"
+                >
+
+            </div>
 
         </div>
 
@@ -58,47 +62,73 @@
 
 </section>
 
+<!-- LOGIN MODAL -->
 
-<div class="modal fade" id="loginModal">
+<div class="modal fade" id="loginModal" tabindex="-1">
 
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md">
 
-        <div class="modal-content">
+        <div class="modal-content login-modal">
 
-            <div class="modal-header">
-                <h5>Iniciar sesión</h5>
+            <div class="modal-header border-0">
+
+                <div>
+
+                    <h4 class="fw-bold mb-1">
+                        Bienvenido
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        Inicia sesión para continuar
+                    </p>
+
+                </div>
 
                 <button 
+                    type="button"
                     class="btn-close"
-                    data-bs-dismiss="modal"
-                ></button>
+                    data-bs-dismiss="modal">
+                </button>
+
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body pt-0">
 
                 <form action="controllers/auth/validate_login.php" method="POST">
 
                     <div class="mb-3">
-                        <label>Email</label>
+
+                        <label class="form-label login-label">
+                            Email
+                        </label>
 
                         <input 
                             type="email"
                             name="email"
-                            class="form-control"
+                            class="form-control login-input"
+                            placeholder="correo@empresa.com"
+                            required
                         >
+
                     </div>
 
-                    <div class="mb-3">
-                        <label>Contraseña</label>
+                    <div class="mb-4">
+
+                        <label class="form-label login-label">
+                            Contraseña
+                        </label>
 
                         <input 
                             type="password"
                             name="password"
-                            class="form-control"
+                            class="form-control login-input"
+                            placeholder="••••••••"
+                            required
                         >
+
                     </div>
 
-                    <button class="btn btn-primary w-100">
+                    <button class="btn login-btn w-100">
                         Ingresar
                     </button>
 
