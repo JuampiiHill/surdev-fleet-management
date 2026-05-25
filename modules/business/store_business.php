@@ -1,37 +1,37 @@
 <?php
 
-require_once '../config/database.php';
+require_once '../../config/database.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $name = trim($_POST['site']);
+    $name = trim($_POST['name']);
 
     $name = strtoupper($name);
 
     try{
 
-        $sql = "SELECT * FROM sites
+        $sql = "SELECT * FROM businesses
                 WHERE name = :name";
         
         $stmt = $conexion->prepare($sql);
         $stmt->bindParam(':name', $name);
         $stmt->execute();
 
-        $site = $stmt->fetch();
+        $businesses = $stmt->fetch();
 
-        if($site) {
-            echo "El Site ya existe";
+        if($businesses) {
+            echo "El Negocio ya existe";
             exit();
         }
 
-        $sql = "INSERT INTO sites (name)
+        $sql = "INSERT INTO businesses (name)
                 VALUES (:name)";
 
         $stmt = $conexion->prepare($sql);
         $stmt->bindParam(':name', $name);
         $stmt->execute();
 
-        header('Location: ../views/dashboard/dashboard.php');
+        header('Location: ../../views/settings/settings.php');
 
         exit();
     } catch(PDOException $e) {

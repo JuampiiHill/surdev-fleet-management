@@ -1,5 +1,5 @@
 <div class="modal fade" id="createOperationModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -13,7 +13,7 @@
                 </button>
             </div>
 
-            <form action="../../modules/store_operation.php" method="POST">
+            <form action="../../modules/operations/store_operation.php" method="POST">
 
                 <div class="modal-body">
 
@@ -90,6 +90,49 @@
                 </div>
 
             </form>
+
+            <hr class="my-4">
+                <h6 class="mb-3">
+                    Operaciones registradas
+                </h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th width="180">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($operations as $operation): ?>
+                            <tr>
+                                <td>
+                                    <?php echo $operation['id']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $operation['name']; ?>
+                                </td>
+                                <td>
+
+                                    <a href="../../modules/operations/edit_operation.php?id=<?php echo $operation['id']; ?>"
+                                        class="btn btn-sm btn-outline-warning">
+                                        Editar
+                                    </a>
+
+                                    <!--<a href="../../modules/operations/delete_operation.php?id=<?php echo $operation['id']; ?>"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('¿Eliminar operacion')">
+                                        Eliminar
+                                    </a> -->
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
         </div>
     </div>

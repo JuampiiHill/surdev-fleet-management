@@ -1,6 +1,6 @@
 <?php
 
-require_once '../config/database.php';
+require_once '../../config/database.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':business', $business);
         $stmt->execute();
 
-        header('Location: ../views/dashboard/dashboard.php');
+        header('Location: ../../views/settings/settings.php');
 
         exit();
     } catch(PDOException $e) {

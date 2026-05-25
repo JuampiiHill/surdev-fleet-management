@@ -12,7 +12,7 @@
             </div>
 
             <div class="modal-body">
-                <form action="../../modules/store_equipment_type.php"
+                <form action="../../modules/equipments_types/store_equipment_type.php"
                       method="POST">
                     <div class="row align-items-end">
                         <div class="col-md-9">
@@ -60,15 +60,16 @@
                                 </td>
                                 <td>
 
-                                    <button class="btn btn-sm btn-outline-warning"
-                                            disabled>
+                                    <a href="../../modules/equipments_types/edit_equipment_type.php?id=<?php echo $type['id']; ?>"
+                                        class="btn btn-sm btn-outline-warning">
                                         Editar
-                                    </button>
+                                    </a>
 
-                                    <button class="btn btn-sm btn-outline-danger"
-                                            disabled>
+                                    <a href="../../modules/equipments_types/delete_equipment_type.php?id=<?php echo $type['id']; ?>"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('¿Eliminar tipo de equipo?')">
                                         Eliminar
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>

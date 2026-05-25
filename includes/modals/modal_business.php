@@ -1,10 +1,10 @@
-<div class="modal fade" id="createSiteModal" tabindex="-1">
-    <div class="modal-dialog">
+<div class="modal fade" id="createBusinessModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
                 <h5 class="modal-title">
-                    Nuevo Site
+                    Nuevo Negocio
                 </h5>
 
                 <button type="button"
@@ -13,17 +13,17 @@
                 </button>
             </div>
 
-            <form action="../../modules/sites/store_site.php" method="POST">
+            <form action="../../modules/business/store_business.php" method="POST">
 
                 <div class="modal-body">
 
                     <div class="mb-3">
                         <label class="form-label">
-                            Nombre site
+                            Nombre del negocio
                         </label>
 
                         <input type="text"
-                               name="site"
+                               name="name"
                                class="form-control"
                                required>
                     </div>
@@ -49,7 +49,7 @@
 
             <hr class="my-4">
                 <h6 class="mb-3">
-                    Sites registrados
+                    Negocios registrados
                 </h6>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
@@ -63,24 +63,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($sites as $site): ?>
+                            <?php foreach($business as $b): ?>
                             <tr>
                                 <td>
-                                    <?php echo $site['id']; ?>
+                                    <?php echo $b['id']; ?>
                                 </td>
                                 <td>
-                                    <?php echo $site['name']; ?>
+                                    <?php echo $b['name']; ?>
                                 </td>
                                 <td>
 
-                                    <a href="../../modules/sites/edit_site.php?id=<?php echo $site['id']; ?>"
+                                    <a href="../../modules/business/edit_business.php?id=<?php echo $b['id']; ?>"
                                         class="btn btn-sm btn-outline-warning">
                                         Editar
                                     </a>
 
-                                    <!--<a href="../../modules/sites/delete_site.php?id=<?php echo $site['id']; ?>"
+                                    <!--<a href="../../modules/operations/delete_operation.php?id=<?php echo $b['id']; ?>"
                                         class="btn btn-sm btn-outline-danger"
-                                        onclick="return confirm('¿Eliminar tipo de equipo?')">
+                                        onclick="return confirm('¿Eliminar operacion')">
                                         Eliminar
                                     </a> -->
                                 </td>

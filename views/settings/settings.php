@@ -17,6 +17,14 @@ $stmt_sites->execute();
 
 $sites = $stmt_sites->fetchAll();
 
+// ----- Obtener operaciones ---------
+$sql_operations = "SELECT * FROM operations ORDER BY name ASC";
+
+$stmt_operations = $conexion->prepare($sql_operations);
+$stmt_operations->execute();
+
+$operations = $stmt_operations->fetchAll();
+
 // ----- Obtener negocios ---------
 $sql_business = "SELECT * FROM businesses ORDER BY name ASC";
 
@@ -24,6 +32,14 @@ $stmt_business = $conexion->prepare($sql_business);
 $stmt_business->execute();
 
 $business = $stmt_business->fetchAll();
+
+// ----- Obtener proveedores ---------
+$sql_providers = "SELECT * FROM providers ORDER BY name ASC";
+
+$stmt_provider = $conexion->prepare($sql_providers);
+$stmt_provider->execute();
+
+$providers = $stmt_provider->fetchAll();
 
 //----- Obtener tipo de equipos ---------
 $sql_equipment_types = "SELECT * FROM equipments_types ORDER BY type ASC";
@@ -56,6 +72,24 @@ $equipment_types = $stmt_equipment_types->fetchAll();
             data-bs-toggle="modal" 
             data-bs-target="#createOperationModal">
                 Nueva operación
+            </button>
+        </div>
+
+        <div class="settings-card">
+            <div class="settings-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <h3>Negocio</h3>
+
+            <p>
+                Agrega y administra los negocios del sistema.
+            </p>
+
+            <button class="btn btn-primary" 
+            data-bs-toggle="modal" 
+            data-bs-target="#createBusinessModal">
+                Nuevp Negocio
             </button>
         </div>
 
@@ -134,6 +168,8 @@ $equipment_types = $stmt_equipment_types->fetchAll();
 </div>
 
 <?php include '../../includes/modals/modal_operation.php'; ?>
+
+<?php include '../../includes/modals/modal_business.php'; ?>
 
 <?php include '../../includes/modals/modal_site.php'; ?>
 

@@ -13,7 +13,7 @@
                 </button>
             </div>
 
-            <form action="../../modules/store_provider.php" method="POST">
+            <form action="../../modules/providers/store_provider.php" method="POST">
 
                 <div class="modal-body">
 
@@ -46,6 +46,49 @@
                 </div>
 
             </form>
+
+            <hr class="my-4">
+                <h6 class="mb-3">
+                    Proveedores registrados
+                </h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th width="180">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($providers as $provider): ?>
+                            <tr>
+                                <td>
+                                    <?php echo $provider['id']; ?>
+                                </td>
+                                <td>
+                                    <?php echo $provider['name']; ?>
+                                </td>
+                                <td>
+
+                                    <a href="../../modules/providers/edit_provider.php?id=<?php echo $provider['id']; ?>"
+                                        class="btn btn-sm btn-outline-warning">
+                                        Editar
+                                    </a>
+
+                                    <!--<a href="../../modules/sites/delete_site.php?id=<?php echo $site['id']; ?>"
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('¿Eliminar tipo de equipo?')">
+                                        Eliminar
+                                    </a> -->
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
         </div>
     </div>

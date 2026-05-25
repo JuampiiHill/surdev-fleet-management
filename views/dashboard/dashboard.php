@@ -55,9 +55,27 @@ $operations = $stmt_op->fetchAll();
     <?php include '../../includes/topbar.php'; ?>
 
     <div class="dashboard-card">
-        <h2 class="mb-4">
-            Listado de equipos
+       <div class="equipment-header">
+
+    <div class="equipment-title">
+        <h2>
+            Gestión general de equipos
         </h2>
+    </div>
+
+    <div class="header-actions">
+
+        <button class="btn btn-primary">
+            + Nuevo equipo
+        </button>
+
+        <button class="btn btn-outline-secondary">
+            Exportar
+        </button>
+
+    </div>
+
+</div>
 
         <div class="filters">
             <div>
@@ -145,9 +163,18 @@ $operations = $stmt_op->fetchAll();
             </div>
         </div>
 
-        <div class="actions">
-            <button class="btn btn-primary">
-                Nuevo equipo
+        <div class="quick-actions">
+
+            <button class="btn btn-outline-primary">
+                Cargar horas
+            </button>
+
+            <button class="btn btn-outline-success">
+                Nueva reparación
+            </button>
+
+            <button class="btn btn-outline-warning">
+                Cambiar asignación
             </button>
 
             <button class="btn btn-outline-danger">
@@ -174,15 +201,17 @@ $operations = $stmt_op->fetchAll();
             </thead>
 
             <tbody>
-                <td>Jaguar</td>
-                <td>Autoelevador</td>
-                <td>8FG25</td>
-                <td>Montacargas SRL</td>
-                <td>2026</td>
-                <td>250</td>
-                <td>Consumo Masivo</td>
-                <td>5511</td>
-                <td>$ 1.932.134,74</td>
+                <tr>    
+                    <td>Jaguar</td>
+                    <td>Autoelevador</td>
+                    <td>8FG25</td>
+                    <td>Montacargas SRL</td>
+                    <td>2026</td>
+                    <td>250</td>
+                    <td>Consumo Masivo</td>
+                    <td>5511</td>
+                    <td>$ 1.932.134,74</td>
+                </tr>
 
                 <tr>
                     <td>Jaguar</td>

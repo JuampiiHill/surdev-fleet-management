@@ -1,6 +1,6 @@
 <?php
 
-require_once '../config/database.php';
+require_once '../../config/database.php';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->execute();
 
-        header('Location: ../views/settings/settings.php');
+        header('Location: ../../views/settings/settings.php');
 
         exit();
 
