@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+
 require_once '../../config/database.php';
 
 $page_title = "Listado de equipos";
@@ -8,161 +9,273 @@ $page_title = "Listado de equipos";
 include '../../includes/header.php';
 include '../../includes/sidebar.php';
 
-// Obtener equipos
-$sql_eq = "SELECT * FROM equipments";
+
+/* GET EQUIPMENTS */
+
+$sql_eq = "
+    SELECT e.id, e.internal_number, e.brand, e.model, e.year, e.contracted_hours, e.monthly_cost, 
+            o.name  AS operation_name, b.name  AS business_name, p.name  AS provider_name, et.type AS equipment_type
+    FROM equipments e
+
+    LEFT JOIN operations o
+        ON e.operation_id = o.id
+
+    LEFT JOIN businesses b
+        ON e.business_id = b.id
+
+    LEFT JOIN providers p
+        ON e.provider_id = p.id
+
+    LEFT JOIN equipments_types et
+        ON e.equipment_type_id = et.id
+
+    WHERE e.active = 1
+
+    ORDER BY e.id DESC
+";
 
 $stmt_eq = $conexion->prepare($sql_eq);
-$stmt_eq-> execute();
+$stmt_eq->execute();
 
 $equipments = $stmt_eq->fetchAll();
 
-// ----- Obtener sites ---------
-$sql_sites = "SELECT * FROm sites ORDER BY name ASC";
+
+/* GET STATUSES */
+
+$sql_status = "
+    SELECT *
+    FROM equipment_statuses
+";
+
+$stmt_status = $conexion->prepare($sql_status);
+$stmt_status->execute();
+
+$statuses = $stmt_status->fetchAll();
+
+
+/* GET EQUIPMENT TYPES */
+
+$sql_eqt = "
+    SELECT *
+    FROM equipments_types
+    ORDER BY type ASC
+";
+
+$stmt_eqt = $conexion->prepare($sql_eqt);
+$stmt_eqt->execute();
+
+$equipments_types = $stmt_eqt->fetchAll();
+
+
+/* GET SITES */
+
+$sql_sites = "
+    SELECT *
+    FROM sites
+    ORDER BY name ASC
+";
 
 $stmt_sites = $conexion->prepare($sql_sites);
 $stmt_sites->execute();
 
 $sites = $stmt_sites->fetchAll();
 
-// ----- Obtener negocios ---------
-$sql_business = "SELECT * FROm businesses ORDER BY name ASC";
+
+/* GET BUSINESS */
+
+$sql_business = "
+    SELECT *
+    FROM businesses
+    ORDER BY name ASC
+";
 
 $stmt_business = $conexion->prepare($sql_business);
 $stmt_business->execute();
 
 $business = $stmt_business->fetchAll();
 
-// ----- Obtener proveedores ---------
-$sql_providers = "SELECT * FROM providers ORDER BY name ASC";
+
+/* GET PROVIDERS */
+
+$sql_providers = "
+    SELECT *
+    FROM providers
+    ORDER BY name ASC
+";
 
 $stmt_provider = $conexion->prepare($sql_providers);
 $stmt_provider->execute();
 
 $providers = $stmt_provider->fetchAll();
 
-// ----- Obtener operaciones ---------
-$sql_op = "SELECT * FROM operations ORDER BY name ASC";
+
+/* GET OPERATIONS */
+
+$sql_op = "
+    SELECT *
+    FROM operations
+    ORDER BY name ASC
+";
 
 $stmt_op = $conexion->prepare($sql_op);
 $stmt_op->execute();
 
 $operations = $stmt_op->fetchAll();
+
 ?>
 
-
 <div class="main-content">
-    
+
     <?php include '../../includes/topbar.php'; ?>
 
     <div class="dashboard-card">
-       <div class="equipment-header">
+        <div class="equipment-header">
+            <div class="equipment-title">
 
-    <div class="equipment-title">
-        <h2>
-            Gestión general de equipos
-        </h2>
-    </div>
+                <h2>
+                    Gestión general de equipos
+                </h2>
+            </div>
 
-    <div class="header-actions">
+            <div class="header-actions">
 
-        <button class="btn btn-primary">
-            + Nuevo equipo
-        </button>
+                <button
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createEquipmentModal"
+                >
+                    + Nuevo equipo
+                </button>
 
-        <button class="btn btn-outline-secondary">
-            Exportar
-        </button>
-
-    </div>
-
-</div>
-
+                <button class="btn btn-outline-secondary">
+                    Exportar
+                </button>
+            </div>
+        </div>
         <div class="filters">
             <div>
+
                 <label class="filter-label">
-                    Operacion
+                    Operación
                 </label>
 
                 <select class="form-select">
+
                     <option value="">
-                        Todas los negocios
+                        Todas las operaciones
                     </option>
+
                     <?php foreach($operations as $op): ?>
-                    <option value="<?php echo $op['id']; ?>">
-                        <?php echo $op['name']; ?>
-                    </option>
+
+                        <option value="<?php echo $op['id']; ?>">
+                            <?php echo $op['name']; ?>
+                        </option>
+
                     <?php endforeach; ?>
+
                 </select>
             </div>
-
             <div>
+
                 <label class="filter-label">
                     Negocio
                 </label>
 
                 <select class="form-select">
+
                     <option value="">
-                        Todas los negocios
+                        Todos los negocios
                     </option>
+
                     <?php foreach($business as $b): ?>
-                    <option value="<?php echo $b['id']; ?>">
-                        <?php echo $b['name']; ?>
-                    </option>
+
+                        <option value="<?php echo $b['id']; ?>">
+                            <?php echo $b['name']; ?>
+                        </option>
+
                     <?php endforeach; ?>
+
                 </select>
             </div>
-
             <div>
+
                 <label class="filter-label">
                     Site
                 </label>
 
                 <select class="form-select">
+
                     <option value="">
-                        Todas los sites
+                        Todos los sites
                     </option>
+
                     <?php foreach($sites as $site): ?>
-                    <option value="<?php echo $site['id']; ?>">
-                        <?php echo $site['name']; ?>
-                    </option>
+
+                        <option value="<?php echo $site['id']; ?>">
+                            <?php echo $site['name']; ?>
+                        </option>
+
                     <?php endforeach; ?>
+
                 </select>
             </div>
-
             <div>
+
                 <label class="filter-label">
                     Proveedor
                 </label>
 
                 <select class="form-select">
+
                     <option value="">
-                        Todas los sites
+                        Todos los proveedores
                     </option>
+
                     <?php foreach($providers as $p): ?>
-                    <option value="<?php echo $p['id']; ?>">
-                        <?php echo $p['name']; ?>
-                    </option>
+
+                        <option value="<?php echo $p['id']; ?>">
+                            <?php echo $p['name']; ?>
+                        </option>
+
                     <?php endforeach; ?>
+
                 </select>
             </div>
-
             <div>
+
                 <label class="filter-label">
                     Estado
                 </label>
 
                 <select class="form-select">
-                    <option>Todas</option>
+
+                    <option value="">
+                        Todos
+                    </option>
+
+                    <?php foreach($statuses as $status): ?>
+
+                        <option value="<?php echo $status['id']; ?>">
+                            <?php echo $status['name']; ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
                 </select>
             </div>
             <div>
+
                 <label class="filter-label">
                     Buscar
                 </label>
-                <input type="text" class="form-control" placeholder="Buscar equipo...">
+
+                <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar equipo..."
+                >
             </div>
         </div>
-
         <div class="quick-actions">
 
             <button class="btn btn-outline-primary">
@@ -180,67 +293,76 @@ $operations = $stmt_op->fetchAll();
             <button class="btn btn-outline-danger">
                 Indisponibilidad
             </button>
-
         </div>
-
         <div class="table-responsive">
+
             <table class="table table-hover align-middle">
 
-            <thead>
-                <tr>
-                    <th>Operacion</th>
-                    <th>Tipo</th>
-                    <th>Modelo</th>
-                    <th>Proveedor</th>
-                    <th>Año</th>
-                    <th>Hs Contratadas</th>
-                    <th>Negocio</th>
-                    <th>ID</th>
-                    <th>Costo</th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                        <th>Operación</th>
+                        <th>Tipo</th>
+                        <th>Modelo</th>
+                        <th>Proveedor</th>
+                        <th>Año</th>
+                        <th>Hs Contratadas</th>
+                        <th>Negocio</th>
+                        <th>Interno</th>
+                        <th>Costo</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <tr>    
-                    <td>Jaguar</td>
-                    <td>Autoelevador</td>
-                    <td>8FG25</td>
-                    <td>Montacargas SRL</td>
-                    <td>2026</td>
-                    <td>250</td>
-                    <td>Consumo Masivo</td>
-                    <td>5511</td>
-                    <td>$ 1.932.134,74</td>
-                </tr>
+                <tbody>
+                    <?php foreach($equipments as $equipment): ?>
+                        <tr onclick="window.location.href='../equipments/equipment_detail.php?id=<?php echo $equipment['id']; ?>'">
 
-                <tr>
-                    <td>Jaguar</td>
-                    <td>Zorra HB</td>
-                    <td>LPE200</td>
-                    <td>Logística del Sur</td>
-                    <td>2025</td>
-                    <td>250</td>
-                    <td>Consumo Masivo</td>
-                    <td>EQ001</td>
-                    <td>$ 932.134,74</td>
-                </tr>
-                <!-- <?php foreach($equipments as $equipment): ?>
+                            <td>
+                                <?php echo $equipment['operation_name']; ?>
+                            </td>
 
-                <tr onclick="window.location.href='../equipments/equipment_detail.php?id=<?php echo $equipment['id']; ?>'">
-                    <td>
-                        <?php echo $equipment['model']; ?>
-                    </td>
-                    <td>
-                        <?php echo $equipment['year']; ?>            
-                    </td>
-                    <td>
-                        <?php echo $equipment['id']; ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?> -->         
+                            <td>
+                                <?php echo $equipment['equipment_type']; ?>
+                            </td>
 
-            </tbody>
-        </table>
+                            <td>
+                                <?php echo $equipment['brand']; ?>
+                                <?php echo $equipment['model']; ?>
+                            </td>
+
+                            <td>
+                                <?php echo $equipment['provider_name']; ?>
+                            </td>
+
+                            <td>
+                                <?php echo $equipment['year']; ?>
+                            </td>
+
+                            <td>
+                                <?php echo $equipment['contracted_hours']; ?>
+                            </td>
+
+                            <td>
+                                <?php echo $equipment['business_name']; ?>
+                            </td>
+
+                            <td>
+                                <?php echo $equipment['internal_number']; ?>
+                            </td>
+
+                            <td>
+                                $
+                                <?php echo number_format(
+                                    $equipment['monthly_cost'],
+                                    2,
+                                    ',',
+                                    '.'
+                                ); ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -250,4 +372,6 @@ $operations = $stmt_op->fetchAll();
 
 <?php include '../../includes/modals/modal_provider.php'; ?>
 
-<?php include '../../includes/footer.php';?>
+<?php include '../../includes/modals/modal_equipment.php'; ?>
+
+<?php include '../../includes/footer.php'; ?>
