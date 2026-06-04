@@ -1,0 +1,319 @@
+/* =========================================
+LAYOUT GENERAL
+========================================= */
+
+.main-content.equipment-detail-layout{
+    margin-left:230px !important;
+    padding:0 !important;
+    background:#ffffff !important;
+    min-height:100vh;
+}
+
+body{
+    background:#f4f6f9;
+}
+
+.equipment-detail-layout{
+    margin-left:230px;
+    padding:0;
+    min-height:100vh;
+}
+
+/* =========================================
+TOPBAR
+========================================= */
+
+.detail-topbar{
+    height:58px;
+    background:#fff;
+    border-bottom:1px solid #dfe4ea;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 30px;
+}
+
+.detail-back-link{
+    color:#111827;
+    text-decoration:none;
+    font-weight:600;
+    font-size:14px;
+}
+
+.detail-back-link i{
+    margin-right:8px;
+}
+
+/* =========================================
+HEADER EQUIPO
+========================================= */
+
+.equipment-header-bar{
+    background:#fff;
+    border-bottom:1px solid #dfe4ea;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:14px 30px;
+}
+
+.equipment-header-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+.equipment-header-left h1{
+    margin:0;
+    font-size:20px;
+    font-weight:600;
+    color:#111827;
+}
+
+.equipment-subtitle{
+    font-size:14px;
+    color:#6b7280;
+}
+
+.equipment-status-badge{
+    background:#dcfce7;
+    color:#166534;
+
+    padding:6px 14px;
+    border-radius:10px;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+.equipment-header-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+/* =========================================
+CONTENT
+========================================= */
+
+.detail-content{
+    padding:20px;
+}
+
+.equipment-top-grid{
+    display:grid;
+    grid-template-columns:1.60fr 1fr 1.4fr;
+    gap:5px;
+    align-items:stretch;
+}
+
+/* =========================================
+CARDS
+========================================= */
+
+.detail-card{
+    height: 100%;
+    background:#fff;
+    border:1px solid #dfe4ea;
+    border-radius:20px;
+    padding:22px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title{
+    font-size:18px;
+    font-weight:700;
+    color:#111827;
+    margin-bottom:18px;
+}
+
+/* =========================================
+INFO GENERAL
+========================================= */
+
+.info-card-content{
+    display:grid;
+    grid-template-columns:1fr 220px;
+    gap:25px;
+    align-items:center;
+}
+
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:20px;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #eef2f7;
+}
+
+.info-row span{
+    color:#64748b;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+.info-row strong{
+    color:#111827;
+    font-size:13px;
+    font-weight:600;
+
+    text-align:right;
+    word-break:break-word;
+}
+
+.equipment-image-box{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.equipment-image-box img{
+    max-width:200px;
+    width:100%;
+}
+
+/* =========================================
+UBICACION Y MANTENIMIENTO
+========================================= */
+
+.location-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+
+    padding:13px 0;
+
+    border-bottom:1px solid #eef2f7;
+}
+
+.location-row span{
+    color:#64748b;
+    font-size:13px;
+}
+
+.location-row strong{
+    color:#111827;
+    font-size:13px;
+    font-weight:600;
+    text-align:right;
+}
+
+.location-header{
+    margin-bottom:10px;
+}
+
+/* =========================================
+ESTADOS
+========================================= */
+
+.maintenance-ok{
+    color:#16a34a;
+    font-weight:700 !important;
+}
+
+.maintenance-warning{
+    color:#f59e0b;
+    font-weight:700 !important;
+}
+
+.maintenance-danger{
+    color:#dc2626;
+    font-weight:700 !important;
+}
+
+/* =========================================
+CARD MANTENIMIENTO
+========================================= */
+
+.maintenance-content{
+    display:grid;
+    grid-template-columns:170px 1fr;
+    gap:15px;
+    align-items:center;
+}
+
+.maintenance-gauge{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.progress-ring{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.progress-inner{
+    width:112px;
+    height:112px;
+
+    background:#fff;
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:24px;
+    font-weight:700;
+    color:#111827;
+}
+
+.maintenance-data{
+    width:100%;
+}
+
+/* =========================================
+RESPONSIVE
+========================================= */
+
+@media(max-width:1400px){
+
+    .equipment-top-grid{
+        grid-template-columns:1fr;
+    }
+
+    .maintenance-content{
+        grid-template-columns:1fr;
+    }
+
+    .info-card-content{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .equipment-header-bar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+    }
+
+    .equipment-header-actions{
+        width:100%;
+    }
+
+    .equipment-header-actions .btn{
+        width:100%;
+    }
+
+}

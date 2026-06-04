@@ -26,7 +26,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        $sql = "INSERT INTO operations (name, site_id, businesses_id )
+        $sql = "INSERT INTO operations (name, site_id, business_id )
                 VALUES (:name, :site, :business)";
 
         $stmt = $conexion->prepare($sql);

@@ -9,7 +9,7 @@
     <ul class="menu">
 
         <li>
-            <a href="../dashboard/dashboard.php"
+            <a href="../../views/dashboard/dashboard.php"
             class="<?php echo ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
                 <i class="bi bi-grid"></i>
                 Dashboard

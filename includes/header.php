@@ -15,8 +15,11 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
     >
 
-    <!-- CSS propio -->
     <link rel="stylesheet" href="/surdev/assets/css/style.css">
+
+    <?php if(basename($_SERVER['PHP_SELF']) == 'equipment_detail.php'): ?>
+    <link rel="stylesheet" href="/surdev/assets/css/equipment-detail.css">
+    <?php endif; ?>
 </head>
 
 <body>

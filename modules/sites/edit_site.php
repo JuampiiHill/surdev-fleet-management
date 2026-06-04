@@ -81,7 +81,7 @@ if(isset($_GET['id'])) {
                     Guardar cambios
                 </button>
 
-                <a href="../views/settings/settings.php"
+                <a href="../../views/settings/settings.php"
                    class="btn btn-secondary">
                     Volver
                 </a>

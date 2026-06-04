@@ -4,55 +4,35 @@ session_start();
 
 require_once '../../config/database.php';
 
-/* =========================================================
-   VALIDAR MÉTODO
-========================================================= */
-
-if($_SERVER['REQUEST_METHOD'] != 'POST'){
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
     header('Location: ../../views/dashboard/dashboard.php');
     exit;
 }
 
-/* =========================================================
-   DATOS DEL FORMULARIO
-========================================================= */
+/* =====================
+   CAPTURAS DEL FORM
+========================= */
 
-$internal_number   = trim($_POST['internal_number']);
-$brand             = trim($_POST['brand']);
-$model             = trim($_POST['model']);
+$internal_number = trim($_POST['internal_number']);
+$brand = trim($_POST['brand']);
+$model = trim($_POST['model']);
+$year = !empty($_POST['year']) ? (int)$_POST['year'] : null;
+$serial_number = trim($_POST['serial_number']);
+$equipment_type_id = (int)$_POST['equipment_type_id'];
+$operation_id = (int)$_POST['operation_id'];
+$provider_id = (int)$_POST['provider_id'];
+$initial_hourmeter = !empty($_POST['initial_hourmeter']) ? (float)$_POST['initial_hourmeter'] : 0;
+$maintenance_interval_hours = !empty($_POST['maintenance_interval_hours']) ? (int)$_POST['maintenance_interval_hours'] : 250;
+$contracted_hours = !empty($_POST['contracted_hours']) ? (int)$_POST['contracted_hours'] : 0;
+$monthly_cost = !empty($_POST['monthly_cost']) ? (float)$_POST['monthly_cost'] : 0;
+$battery_quantity = !empty($_POST['battery_quantity']) ? (int)$_POST['battery_quantity'] : 0;
+$status_id = (int)$_POST['status_id'];
+$observations = trim($_POST['observations']);
 
-$year              = !empty($_POST['year'])
-                    ? $_POST['year']
-                    : null;
-
-$serial_number     = trim($_POST['serial_number']);
-
-$contracted_hours  = !empty($_POST['contracted_hours'])
-                    ? $_POST['contracted_hours']
-                    : 0;
-
-$equipment_type_id = $_POST['equipment_type_id'];
-
-$provider_id       = $_POST['provider_id'];
-
-$operation_id      = $_POST['operation_id'];
-
-$status_id         = $_POST['status_id'];
-
-$monthly_cost      = !empty($_POST['monthly_cost'])
-                    ? $_POST['monthly_cost']
-                    : 0;
-
-$battery_quantity  = !empty($_POST['battery_quantity'])
-                    ? $_POST['battery_quantity']
-                    : 0;
-
-$observations      = trim($_POST['observations']);
-
-/* =========================================================
-   OBTENER BUSINESS Y SITE DESDE OPERACIÓN
-========================================================= */
+/* ==========================================
+   OBTENER NEGOCIO Y SITES DESDE OPERACIÓN
+=========================================== */
 
 $sql_operation = "
     SELECT
@@ -64,31 +44,21 @@ $sql_operation = "
 
 $stmt_operation = $conexion->prepare($sql_operation);
 
-$stmt_operation->execute([
-    $operation_id
-]);
-
+$stmt_operation->execute([$operation_id]);
 $operation_data = $stmt_operation->fetch();
 
-if(!$operation_data){
-
+if (!$operation_data) {
     die('Operación inválida');
 }
 
 $business_id = $operation_data['business_id'];
-
 $site_id = $operation_data['site_id'];
-
-/* =========================================================
-   SUBIDA DE IMAGEN
-========================================================= */
-
 $image_name = null;
 
-if(
+if (
     isset($_FILES['image']) &&
     $_FILES['image']['error'] == 0
-){
+) {
 
     $allowed_extensions = [
         'jpg',
@@ -108,167 +78,94 @@ if(
         )
     );
 
-    if(in_array($extension, $allowed_extensions)){
+    if (in_array($extension, $allowed_extensions)) {
 
         $image_name = uniqid() . '.' . $extension;
 
-        $destination =
-            '../../assets/uploads/equipments/' .
-            $image_name;
+        $destination = '../../assets/uploads/equipments/' . $image_name;
 
         move_uploaded_file(
-            $tmp_name,
-            $destination
-        );
+            $tmp_name, $destination);
     }
 }
 
-/* =========================================================
-   INSERT EQUIPO
-========================================================= */
+/* ============
+   INSERT 
+============ */
 
 $sql = "
 INSERT INTO equipments (
 
     internal_number,
+    serial_number,
     brand,
     model,
     year,
-    serial_number,
     battery_quantity,
-    contracted_hours,
-    monthly_cost,
-
     equipment_type_id,
     provider_id,
-    operation_id,
     business_id,
+    operation_id,
     site_id,
+    contracted_hours,
+    monthly_cost,
     status_id,
-
+    active,
     observations,
     image,
-    active
+    initial_hourmeter,
+    current_hourmeter,
+    maintenance_interval_hours
 
-) VALUES (
+)
+VALUES (
 
     :internal_number,
+    :serial_number,
     :brand,
     :model,
     :year,
-    :serial_number,
     :battery_quantity,
-    :contracted_hours,
-    :monthly_cost,
-
     :equipment_type_id,
     :provider_id,
-    :operation_id,
     :business_id,
+    :operation_id,
     :site_id,
+    :contracted_hours,
+    :monthly_cost,
     :status_id,
-
+    1,
     :observations,
     :image,
-    1
+    :initial_hourmeter,
+    :initial_hourmeter,
+    :maintenance_interval_hours
+
 )
 ";
 
 $stmt = $conexion->prepare($sql);
 
-/* =========================================================
-   BINDS
-========================================================= */
-
-$stmt->bindParam(
-    ':internal_number',
-    $internal_number
-);
-
-$stmt->bindParam(
-    ':brand',
-    $brand
-);
-
-$stmt->bindParam(
-    ':model',
-    $model
-);
-
-$stmt->bindParam(
-    ':year',
-    $year
-);
-
-$stmt->bindParam(
-    ':serial_number',
-    $serial_number
-);
-
-$stmt->bindParam(
-    ':battery_quantity',
-    $battery_quantity
-);
-
-$stmt->bindParam(
-    ':contracted_hours',
-    $contracted_hours
-);
-
-$stmt->bindParam(
-    ':monthly_cost',
-    $monthly_cost
-);
-
-$stmt->bindParam(
-    ':equipment_type_id',
-    $equipment_type_id
-);
-
-$stmt->bindParam(
-    ':provider_id',
-    $provider_id
-);
-
-$stmt->bindParam(
-    ':operation_id',
-    $operation_id
-);
-
-$stmt->bindParam(
-    ':business_id',
-    $business_id
-);
-
-$stmt->bindParam(
-    ':site_id',
-    $site_id
-);
-
-$stmt->bindParam(
-    ':status_id',
-    $status_id
-);
-
-$stmt->bindParam(
-    ':observations',
-    $observations
-);
-
-$stmt->bindParam(
-    ':image',
-    $image_name
-);
-
-/* =========================================================
-   EJECUTAR
-========================================================= */
+$stmt->bindParam(':internal_number', $internal_number);
+$stmt->bindParam(':serial_number', $serial_number);
+$stmt->bindParam(':brand', $brand);
+$stmt->bindParam(':model', $model);
+$stmt->bindParam(':year', $year);
+$stmt->bindParam(':battery_quantity', $battery_quantity);
+$stmt->bindParam(':equipment_type_id', $equipment_type_id);
+$stmt->bindParam(':provider_id', $provider_id);
+$stmt->bindParam(':business_id', $business_id);
+$stmt->bindParam(':operation_id', $operation_id);
+$stmt->bindParam(':site_id', $site_id);
+$stmt->bindParam(':contracted_hours', $contracted_hours);
+$stmt->bindParam(':monthly_cost', $monthly_cost);
+$stmt->bindParam(':status_id', $status_id);
+$stmt->bindParam(':observations', $observations);
+$stmt->bindParam(':image', $image_name);
+$stmt->bindParam(':initial_hourmeter', $initial_hourmeter);
+$stmt->bindParam(':maintenance_interval_hours', $maintenance_interval_hours);
 
 $stmt->execute();
-
-/* =========================================================
-   REDIRECT
-========================================================= */
 
 header(
     'Location: ../../views/dashboard/dashboard.php'

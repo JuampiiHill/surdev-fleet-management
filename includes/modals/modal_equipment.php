@@ -1,11 +1,14 @@
 <div class="modal fade" id="createEquipmentModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content login-modal">
+
             <div class="modal-header border-0">
+
                 <div>
                     <h4 class="fw-bold mb-1">
                         Nuevo equipo
                     </h4>
+
                     <p class="text-muted mb-0">
                         Registro de un nuevo equipo
                     </p>
@@ -27,219 +30,351 @@
 
                 <div class="modal-body">
 
-    <div class="row">
-        <div class="col-md-3 mb-3">
+                    <!-- FILA 1 -->
 
-            <label class="form-label login-label">
-                Interno
-            </label>
+                    <div class="row">
 
-            <input
-                type="text"
-                name="internal_number"
-                class="form-control login-input"
-                required
-            >
-        </div>
+                        <div class="col-md-3 mb-3">
 
-        <div class="col-md-3 mb-3">
+                            <label class="form-label login-label">
+                                Interno
+                            </label>
 
-            <label class="form-label login-label">
-                Marca
-            </label>
+                            <input
+                                type="text"
+                                name="internal_number"
+                                class="form-control login-input"
+                                required
+                            >
 
-            <input
-                type="text"
-                name="brand"
-                class="form-control login-input"
-            >
+                        </div>
 
-        </div>
+                        <div class="col-md-3 mb-3">
 
-        <div class="col-md-3 mb-3">
+                            <label class="form-label login-label">
+                                Marca
+                            </label>
 
-            <label class="form-label login-label">
-                Modelo
-            </label>
+                            <input
+                                type="text"
+                                name="brand"
+                                class="form-control login-input"
+                            >
 
-            <input type="text" name="model" class="form-control login-input" required>
-        </div>
+                        </div>
 
-        <div class="col-md-3 mb-3">
+                        <div class="col-md-3 mb-3">
 
-            <label class="form-label login-label">
-                Año
-            </label>
+                            <label class="form-label login-label">
+                                Modelo
+                            </label>
 
-            <input type="number" name="year" class="form-control login-input">
-        </div>
-    </div>
+                            <input
+                                type="text"
+                                name="model"
+                                class="form-control login-input"
+                                required
+                            >
 
-    <div class="row">
-        <div class="col-md-4 mb-3">
+                        </div>
 
-            <label class="form-label login-label">
-                Nº Serie
-            </label>
+                        <div class="col-md-3 mb-3">
 
-            <input type="text" name="serial_number" class="form-control login-input">
-        </div>
+                            <label class="form-label login-label">
+                                Año
+                            </label>
 
-        <div class="col-md-4 mb-3">
+                            <input
+                                type="number"
+                                name="year"
+                                class="form-control login-input"
+                            >
 
-            <label class="form-label login-label">
-                Tipo de equipo
-            </label>
+                        </div>
 
-            <select name="equipment_type_id" class="form-select login-input" required>
+                    </div>
 
-                <option value="">
-                    Seleccionar
-                </option>
+                    <!-- FILA 2 -->
 
-                <?php foreach($equipments_types as $type): ?>
+                    <div class="row">
 
-                <option value="<?php echo $type['id']; ?>">
-                    <?php echo $type['type']; ?>
-                </option>
+                        <div class="col-md-4 mb-3">
 
-                <?php endforeach; ?>
+                            <label class="form-label login-label">
+                                Nº Serie
+                            </label>
 
-            </select>
-        </div>
+                            <input
+                                type="text"
+                                name="serial_number"
+                                class="form-control login-input"
+                            >
 
-        <div class="col-md-4 mb-3">
+                        </div>
 
-            <label class="form-label login-label">
-                Operación
-            </label>
+                        <div class="col-md-4 mb-3">
 
-            <select name="operation_id" class="form-select login-input" required>
+                            <label class="form-label login-label">
+                                Tipo de equipo
+                            </label>
 
-                <option value="">
-                    Seleccionar
-                </option>
+                            <select
+                                name="equipment_type_id"
+                                class="form-select login-input"
+                                required
+                            >
 
-                <?php foreach($operations as $op): ?>
+                                <option value="">
+                                    Seleccionar
+                                </option>
 
-                <option value="<?php echo $op['id']; ?>">
-                    <?php echo $op['name']; ?>
-                </option>
+                                <?php foreach($equipments_types as $type): ?>
 
-                <?php endforeach; ?>
+                                    <option value="<?php echo $type['id']; ?>">
+                                        <?php echo $type['type']; ?>
+                                    </option>
 
-            </select>
-        </div>
-    </div>
+                                <?php endforeach; ?>
 
-    <div class="row">
+                            </select>
 
-        <div class="col-md-4 mb-3">
+                        </div>
 
-            <label class="form-label login-label">
-                Proveedor
-            </label>
+                        <div class="col-md-4 mb-3">
 
-            <select name="provider_id" class="form-select login-input" required>
+                            <label class="form-label login-label">
+                                Operación
+                            </label>
 
-                <option value="">
-                    Seleccionar
-                </option>
+                            <select
+                                name="operation_id"
+                                class="form-select login-input"
+                                required
+                            >
 
-                <?php foreach($providers as $provider): ?>
+                                <option value="">
+                                    Seleccionar
+                                </option>
 
-                <option value="<?php echo $provider['id']; ?>">
-                    <?php echo $provider['name']; ?>
-                </option>
+                                <?php foreach($operations as $op): ?>
 
-                <?php endforeach; ?>
+                                    <option value="<?php echo $op['id']; ?>">
+                                        <?php echo $op['name']; ?>
+                                    </option>
 
-            </select>
-        </div>
+                                <?php endforeach; ?>
 
-        <div class="col-md-4 mb-3">
+                            </select>
 
-            <label class="form-label login-label">
-                Hs contratadas
-            </label>
+                        </div>
 
-            <input type="number" name="contracted_hours" class="form-control login-input" value="0">
-        </div>
+                    </div>
 
-        <div class="col-md-4 mb-3">
+                    <!-- FILA 3 -->
 
-            <label class="form-label login-label">
-                Costo mensual
-            </label>
+                    <div class="row">
 
-            <input type="number" step="0.01" name="monthly_cost" class="form-control login-input" value="0">
-        </div>
-    </div>
+                        <div class="col-md-4 mb-3">
 
-    <div class="row">
+                            <label class="form-label login-label">
+                                Proveedor
+                            </label>
 
-        <div class="col-md-4 mb-3">
+                            <select
+                                name="provider_id"
+                                class="form-select login-input"
+                                required
+                            >
 
-            <label class="form-label login-label">
-                Cantidad baterías
-            </label>
+                                <option value="">
+                                    Seleccionar
+                                </option>
 
-            <input type="number" name="battery_quantity" class="form-control login-input" value="0">
-        </div>
+                                <?php foreach($providers as $provider): ?>
 
-        <div class="col-md-4 mb-3">
+                                    <option value="<?php echo $provider['id']; ?>">
+                                        <?php echo $provider['name']; ?>
+                                    </option>
 
-            <label class="form-label login-label">
-                Estado
-            </label>
+                                <?php endforeach; ?>
 
-            <select name="status_id" class="form-select login-input" required>
+                            </select>
 
-                <option value="">
-                    Seleccionar
-                </option>
+                        </div>
 
-                <?php foreach($statuses as $status): ?>
+                        <div class="col-md-4 mb-3">
 
-                <option value="<?php echo $status['id']; ?>">
-                    <?php echo $status['name']; ?>
-                </option>
+                            <label class="form-label login-label">
+                                Horómetro inicial
+                            </label>
 
-                <?php endforeach; ?>
+                            <input
+                                type="number"
+                                step="0.01"
+                                name="initial_hourmeter"
+                                class="form-control login-input"
+                                value="0"
+                            >
 
-            </select>
-        </div>
+                        </div>
 
-        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 mb-3">
 
-            <label class="form-label login-label">
-                Imagen del equipo
-            </label>
+                            <label class="form-label login-label">
+                                Intervalo mantenimiento (hs)
+                            </label>
 
-            <input type="file" name="image" class="form-control login-input">
-        </div>
-    </div>
+                            <input
+                                type="number"
+                                name="maintenance_interval_hours"
+                                class="form-control login-input"
+                                value="250"
+                            >
 
-    <div class="mb-3">
+                        </div>
 
-        <label class="form-label login-label">
-            Observaciones
-        </label>
+                    </div>
 
-        <textarea name="observations" rows="4" class="form-control" style="border-radius:14px;"></textarea>
-    </div>
-</div>
+                    <!-- FILA 4 -->
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label login-label">
+                                Hs mensuales contratadas
+                            </label>
+
+                            <input
+                                type="number"
+                                name="contracted_hours"
+                                class="form-control login-input"
+                                value="0"
+                            >
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label login-label">
+                                Costo mensual
+                            </label>
+
+                            <input
+                                type="number"
+                                step="0.01"
+                                name="monthly_cost"
+                                class="form-control login-input"
+                                value="0"
+                            >
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label login-label">
+                                Cantidad baterías
+                            </label>
+
+                            <input
+                                type="number"
+                                name="battery_quantity"
+                                class="form-control login-input"
+                                value="0"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- FILA 5 (CENTRADA) -->
+
+                    <div class="row justify-content-center">
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label login-label">
+                                Estado
+                            </label>
+
+                            <select
+                                name="status_id"
+                                class="form-select login-input"
+                                required
+                            >
+
+                                <option value="">
+                                    Seleccionar
+                                </option>
+
+                                <?php foreach($statuses as $status): ?>
+
+                                    <option value="<?php echo $status['id']; ?>">
+                                        <?php echo $status['name']; ?>
+                                    </option>
+
+                                <?php endforeach; ?>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label login-label">
+                                Imagen del equipo
+                            </label>
+
+                            <input
+                                type="file"
+                                name="image"
+                                class="form-control login-input"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <!-- OBSERVACIONES -->
+
+                    <div class="mb-3">
+
+                        <label class="form-label login-label">
+                            Observaciones
+                        </label>
+
+                        <textarea
+                            name="observations"
+                            rows="4"
+                            class="form-control"
+                            style="border-radius:14px;"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
                 <div class="modal-footer border-0">
 
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                    <button
+                        type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal"
+                    >
                         Cancelar
                     </button>
 
-                    <button type="submit" class="btn btn-primary">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
                         Guardar equipo
                     </button>
+
                 </div>
+
             </form>
+
         </div>
     </div>
 </div>

@@ -13,12 +13,22 @@ include '../../includes/sidebar.php';
 /* GET EQUIPMENTS */
 
 $sql_eq = "
-    SELECT e.id, e.internal_number, e.brand, e.model, e.year, e.contracted_hours, e.monthly_cost, 
-            o.name  AS operation_name, b.name  AS business_name, p.name  AS provider_name, et.type AS equipment_type
+    SELECT
+        e.*,
+        o.name AS operation_name,
+        s.name AS site_name,
+        b.name AS business_name,
+        p.name AS provider_name,
+        et.type AS equipment_type,
+        es.name AS status_name
+
     FROM equipments e
 
     LEFT JOIN operations o
         ON e.operation_id = o.id
+
+    LEFT JOIN sites s
+        ON e.site_id = s.id
 
     LEFT JOIN businesses b
         ON e.business_id = b.id
@@ -28,6 +38,9 @@ $sql_eq = "
 
     LEFT JOIN equipments_types et
         ON e.equipment_type_id = et.id
+
+    LEFT JOIN equipment_statuses es
+        ON e.status_id = es.id
 
     WHERE e.active = 1
 
