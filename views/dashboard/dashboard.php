@@ -289,24 +289,7 @@ $operations = $stmt_op->fetchAll();
                 >
             </div>
         </div>
-        <div class="quick-actions">
-
-            <button class="btn btn-outline-primary">
-                Cargar horas
-            </button>
-
-            <button class="btn btn-outline-success">
-                Nueva reparación
-            </button>
-
-            <button class="btn btn-outline-warning">
-                Cambiar asignación
-            </button>
-
-            <button class="btn btn-outline-danger">
-                Indisponibilidad
-            </button>
-        </div>
+        
         <div class="table-responsive">
 
             <table class="table table-hover align-middle">

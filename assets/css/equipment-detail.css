@@ -281,6 +281,114 @@ CARD MANTENIMIENTO
 }
 
 /* =========================================
+TABS EQUIPO
+========================================= */
+
+.equipment-tabs-card{
+    margin-top:20px;
+}
+
+.usage-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.usage-header h5{
+    margin:0;
+    font-size:18px;
+    font-weight:700;
+    color:#111827;
+}
+
+.usage-period{
+    color:#64748b;
+    font-size:13px;
+}
+
+.usage-chart-wrapper{
+    position:relative;
+    width:100%;
+    height:320px;
+}
+
+#equipmentUsageChart{
+    width:100% !important;
+    height:100% !important;
+}
+
+.nav-tabs .nav-link{
+    color:#64748b;
+    font-weight:600;
+}
+
+.nav-tabs .nav-link.active{
+    color:#2563eb;
+}
+
+.repair-orders-table th{
+    font-size:13px;
+    color:#64748b;
+    font-weight:600;
+}
+
+.repair-orders-table td{
+    vertical-align:middle;
+}
+
+.priority-badge{
+    padding:5px 10px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.priority-low{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.priority-medium{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.priority-high{
+    background:#fee2e2;
+    color:#991b1b;
+}
+
+.status-badge{
+    background:#e0f2fe;
+    color:#075985;
+    padding:5px 10px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.empty-state{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.empty-state i{
+    font-size:48px;
+    color:#94a3b8;
+}
+
+.empty-state h5{
+    margin-top:15px;
+}
+
+.failure-column{
+    max-width:350px;
+    color:#475569;
+    font-size:13px;
+}
+
+/* =========================================
 RESPONSIVE
 ========================================= */
 
