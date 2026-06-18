@@ -1,3 +1,4 @@
+?>
 <div class="modal fade" id="createEquipmentModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content login-modal">
@@ -128,7 +129,7 @@
                                     Seleccionar
                                 </option>
 
-                                <?php foreach($equipments_types as $type): ?>
+                                <?php foreach($equipment_types as $type): ?>
 
                                     <option value="<?php echo $type['id']; ?>">
                                         <?php echo $type['type']; ?>

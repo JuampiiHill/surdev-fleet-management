@@ -135,7 +135,7 @@ $stmt_insert->execute([
     ':calculated_discount' => $calculated_discount,
     ':manual_discount' => $manual_discount,
     ':reason' => $reason,
-    ':created_by' => $_SESSION['id'] ?? null
+    ':created_by' => $_SESSION['user_id'] ?? null
 ]);
 
 header(

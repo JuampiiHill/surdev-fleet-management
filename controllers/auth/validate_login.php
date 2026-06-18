@@ -4,34 +4,71 @@ session_start();
 
 require_once '../../config/database.php';
 
-$email = $_POST['email'];  //$_POST recibe datos del formulario
-$password = $_POST['password'];
+if (
+    empty($_POST['email']) ||
+    empty($_POST['password'])
+) {
 
-$sql = "SELECT * FROM users
-        WHERE email = :email
-        AND password = :password";
-
-try{
-    $stmt = $conexion->prepare($sql); // prepare() prepara una consulta segura
-    $stmt->bindParam(':email', $email); //bindParam inserta valores evitando sql injection
-    $stmt->bindParam(':password', $password);
-    $stmt->execute(); // ejecuta la consulta
-
-    $user = $stmt->fetch(); // fetch() trae el usuario encontrado
-
-    if($user) {
-        $_SESSION['user'] = $user['name']; // Guardamos datos
-        $_SESSION['rol'] = $user['rol'];
-        $_SESSION['id'] = $user['id'];
-        $_SESSION['lastname'] = $user['lastname'];
-
-        header('Location: ../../views/dashboard/dashboard.php'); // Redirigimos
-        exit(); // Cotamos ejecucion
-    } else {
-        echo "LOGIN INCORRECTO";
-    }
-} catch (PDOException $e) {
-    echo "error:" . $e->getMessage($e);
+    header('Location: ../../index.php');
+    exit;
 }
 
-?>
+$email = trim($_POST['email']);
+$password = trim($_POST['password']);
+
+try {
+
+    $sql = "
+
+    SELECT *
+    FROM users
+    WHERE email = :email
+
+";
+
+$stmt = $conexion->prepare($sql);
+
+$stmt->execute([
+    ':email' => $email
+]);
+
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (
+    !$user ||
+    !password_verify(
+        $password,
+        $user['password']
+    )
+) {
+
+    $_SESSION['login_error'] =
+        'Usuario o contraseña incorrectos';
+
+    header('Location: ../../index.php');
+    exit;
+}
+
+    session_regenerate_id(true);
+
+    $_SESSION['user_name'] = $user['name'];
+    $_SESSION['user_role'] = $user['rol'];
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_lastname'] = $user['lastname'];
+
+    header(
+        'Location: ../../views/dashboard/dashboard.php'
+    );
+
+    exit;
+
+} catch (PDOException $e) {
+
+    error_log($e->getMessage());
+
+    $_SESSION['login_error'] =
+        'Error interno del sistema';
+
+    header('Location: ../../index.php');
+    exit;
+}

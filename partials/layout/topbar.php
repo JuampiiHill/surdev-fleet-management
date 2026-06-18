@@ -9,16 +9,16 @@
     <div class="user-info">
 
         <div class="avatar">
-            <?php echo strtoupper(substr($_SESSION['user'],0,1)); ?>
+            <?php echo strtoupper(substr($_SESSION['user_name'] ?? 'U',0,1)); ?>
         </div>
 
         <div>
             <strong>
-                <?php echo $_SESSION['user']; ?>
+                <?php echo htmlspecialchars(($_SESSION['user_name'] ?? 'Usuario') . ' ' . ($_SESSION['user_lastname'] ?? '')); ?>
             </strong>
 
             <p>
-                <?php echo $_SESSION['rol']; ?>
+                <?php echo htmlspecialchars($_SESSION['user_role'] ?? 'Sin rol'); ?>
             </p>
         </div>
 

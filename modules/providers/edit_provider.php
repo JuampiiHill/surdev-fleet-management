@@ -1,41 +1,74 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'ProviderController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $name = trim($_POST['name']);
-    $name = strtoupper($name);
+try {
 
-    try {
-        $sql = "UPDATE providers
-                SET name = :name
-                WHERE id = :id";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        $id = (int) $_POST['id'];
 
-        header('Location: ../../views/settings/settings.php');
+        $name = strtoupper(
+            trim($_POST['name'])
+        );
 
-        exit();
-    } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        if (
+            $id <= 0 ||
+            empty($name)
+        ) {
+
+            throw new Exception(
+                'Datos inválidos.'
+            );
+        }
+
+        updateProvider(
+            $conexion,
+            $id,
+            $name
+        );
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
     }
-}
 
-if(isset($_GET['id'])) {
-    $id = $_GET['id'];
-    
-    $sql = "SELECT * 
-            FROM providers
-            WHERE id = :id";
-    
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    $provider = $stmt->fetch();
+    if (!isset($_GET['id'])) {
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
+    }
+
+    $id = (int) $_GET['id'];
+
+    $provider = getProviderById(
+        $conexion,
+        $id
+    );
+
+    if (!$provider) {
+
+        throw new Exception(
+            'Proveedor inexistente.'
+        );
+    }
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error edit_provider: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al cargar el proveedor.'
+    );
 }
 ?>
 

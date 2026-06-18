@@ -1,43 +1,58 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'ProviderController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-    $name = trim($_POST['provider']);
-
-    $name = strtoupper($name);
-
-    try{
-
-        $sql = "SELECT * FROM providers
-                WHERE name = :name";
-        
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        $providers = $stmt->fetch();
-
-        if($providers) {
-            echo "El Proveedor ya existe";
-            exit();
-        }
-
-        $sql = "INSERT INTO providers (name)
-                VALUES (:name)";
-
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        header('Location: ../../views/settings/settings.php');
-
-        exit();
-    } catch(PDOException $e) {
-
-        echo "Error: " . $e->getMessage();
-    }
+    header('Location: ../../views/settings/settings.php');
+    exit;
 }
 
-?>
+try {
+
+    $name = strtoupper(
+        trim($_POST['provider'])
+    );
+
+    if (empty($name)) {
+
+        throw new Exception(
+            'Nombre inválido.'
+        );
+    }
+
+    if (
+        providerExists(
+            $conexion,
+            $name
+        )
+    ) {
+
+        throw new Exception(
+            'El proveedor ya existe.'
+        );
+    }
+
+    createProvider(
+        $conexion,
+        $name
+    );
+
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
+
+    exit;
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error store_provider: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al guardar el proveedor.'
+    );
+}

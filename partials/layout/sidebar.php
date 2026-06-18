@@ -52,7 +52,8 @@
         </li>
 
         <li>
-            <a href="#">
+            <a href="../../views/reports/reports.php"
+            class="<?php echo ($current_page == 'reports.php') ? 'active' : ''; ?>">
                 <i class="bi bi-bar-chart"></i>
                 Reportes
             </a>

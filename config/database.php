@@ -17,7 +17,7 @@ try {
     //PDO::ATTR_ERRMODE modo de manejo de errores / PDO::ERRMODE_EXCEPTION lanza una exepcion si ocurre un error
     // Los :: se usan para acceder a las consantes de la CLASE
     $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
-} catch (PDOExeption $e){
+} catch (PDOException $e){
     echo "Error de conexion: " . $e->getMessage(); //obtiene el mensaje del error detallado
 }
 

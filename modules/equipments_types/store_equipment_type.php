@@ -1,50 +1,61 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'EquipmentTypeController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-    $name = trim($_POST['equipment_type']);
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
 
-    $name = strtoupper($name);
-
-    try {
-
-        $sql = "SELECT * 
-                FROM equipments_types
-                WHERE type = :name";
-
-        $stmt = $conexion->prepare($sql);
-
-        $stmt->bindParam(':name', $name);
-
-        $stmt->execute();
-
-        $type = $stmt->fetch();
-
-        if($type) {
-
-            echo "El tipo ya existe";
-
-            exit();
-        }
-
-        $sql = "INSERT INTO equipments_types(type)
-                VALUES(:name)";
-
-        $stmt = $conexion->prepare($sql);
-
-        $stmt->bindParam(':name', $name);
-
-        $stmt->execute();
-
-        header('Location: ../../views/settings/settings.php');
-
-        exit();
-
-    } catch(PDOException $e) {
-
-        echo "Error: " . $e->getMessage();
-    }
+    exit;
 }
-?>
+
+try {
+
+    $type = strtoupper(
+        trim($_POST['equipment_type'])
+    );
+
+    if (empty($type)) {
+
+        throw new Exception(
+            'Tipo inválido.'
+        );
+    }
+
+    if (
+        equipmentTypeExists(
+            $conexion,
+            $type
+        )
+    ) {
+
+        throw new Exception(
+            'El tipo ya existe.'
+        );
+    }
+
+    createEquipmentType(
+        $conexion,
+        $type
+    );
+
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
+
+    exit;
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error store_equipment_type: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al guardar el tipo.'
+    );
+}

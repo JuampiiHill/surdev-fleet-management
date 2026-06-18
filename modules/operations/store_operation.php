@@ -1,47 +1,70 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'OperationController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-    $name = trim($_POST['name']);
-    $name = strtoupper($name);
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
 
-    $site = $_POST['site'];
-    $business = $_POST['business'];
-
-    try{
-
-        $sql = "SELECT * FROM operations
-                WHERE name = :name";
-        
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        $operation = $stmt->fetch();
-
-        if($operation) {
-            echo "El Negocio ya existe";
-            exit();
-        }
-
-        $sql = "INSERT INTO operations (name, site_id, business_id )
-                VALUES (:name, :site, :business)";
-
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name,);
-        $stmt->bindParam(':site', $site);
-        $stmt->bindParam(':business', $business);
-        $stmt->execute();
-
-        header('Location: ../../views/settings/settings.php');
-
-        exit();
-    } catch(PDOException $e) {
-
-        echo "Error: " . $e->getMessage();
-    }
+    exit;
 }
 
-?>
+try {
+
+    $name = strtoupper(
+        trim($_POST['name'])
+    );
+
+    $site_id = (int) $_POST['site'];
+    $business_id = (int) $_POST['business'];
+
+    if (
+        empty($name) ||
+        $site_id <= 0 ||
+        $business_id <= 0
+    ) {
+
+        throw new Exception(
+            'Datos inválidos.'
+        );
+    }
+
+    if (
+        operationExists(
+            $conexion,
+            $name
+        )
+    ) {
+
+        throw new Exception(
+            'La operación ya existe.'
+        );
+    }
+
+    createOperation(
+        $conexion,
+        $name,
+        $site_id,
+        $business_id
+    );
+
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
+
+    exit;
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error store_operation: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al guardar la operación.'
+    );
+}

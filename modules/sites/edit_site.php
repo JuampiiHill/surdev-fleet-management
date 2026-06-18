@@ -1,41 +1,87 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'SiteController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $name = trim($_POST['name']);
-    $name = strtoupper($name);
+try {
 
-    try {
-        $sql = "UPDATE sites
-                SET name = :name
-                WHERE id = :id";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        $id = (int) $_POST['id'];
 
-        header('Location: ../../views/settings/settings.php');
+        $name = strtoupper(
+            trim($_POST['name'])
+        );
 
-        exit();
-    } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        if (
+            $id <= 0 ||
+            empty($name)
+        ) {
+
+            throw new Exception(
+                'Datos inválidos.'
+            );
+        }
+
+        if (
+            siteExistsForAnotherId(
+                $conexion,
+                $name,
+                $id
+            )
+        ) {
+
+            throw new Exception(
+                'Ya existe un site con ese nombre.'
+            );
+        }
+
+        updateSite(
+            $conexion,
+            $id,
+            $name
+        );
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
     }
-}
 
-if(isset($_GET['id'])) {
-    $id = $_GET['id'];
-    
-    $sql = "SELECT * 
-            FROM sites
-            WHERE id = :id";
-    
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    $site = $stmt->fetch();
+    if (!isset($_GET['id'])) {
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
+    }
+
+    $id = (int) $_GET['id'];
+
+    $site = getSiteById(
+        $conexion,
+        $id
+    );
+
+    if (!$site) {
+
+        throw new Exception(
+            'Site inexistente.'
+        );
+    }
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error edit_site: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al cargar el site.'
+    );
 }
 ?>
 

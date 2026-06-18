@@ -1,43 +1,61 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'SiteController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-    $name = trim($_POST['site']);
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
 
-    $name = strtoupper($name);
-
-    try{
-
-        $sql = "SELECT * FROM sites
-                WHERE name = :name";
-        
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        $site = $stmt->fetch();
-
-        if($site) {
-            echo "El Site ya existe";
-            exit();
-        }
-
-        $sql = "INSERT INTO sites (name)
-                VALUES (:name)";
-
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        header('Location: ../../views/settings/settings.php');
-
-        exit();
-    } catch(PDOException $e) {
-
-        echo "Error: " . $e->getMessage();
-    }
+    exit;
 }
 
-?>
+try {
+
+    $name = strtoupper(
+        trim($_POST['site'])
+    );
+
+    if (empty($name)) {
+
+        throw new Exception(
+            'Nombre inválido.'
+        );
+    }
+
+    if (
+        siteExists(
+            $conexion,
+            $name
+        )
+    ) {
+
+        throw new Exception(
+            'El site ya existe.'
+        );
+    }
+
+    createSite(
+        $conexion,
+        $name
+    );
+
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
+
+    exit;
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error store_site: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al guardar el site.'
+    );
+}

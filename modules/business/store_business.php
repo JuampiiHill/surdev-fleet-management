@@ -1,43 +1,62 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'BusinessController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-    $name = trim($_POST['name']);
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
 
-    $name = strtoupper($name);
-
-    try{
-
-        $sql = "SELECT * FROM businesses
-                WHERE name = :name";
-        
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        $businesses = $stmt->fetch();
-
-        if($businesses) {
-            echo "El Negocio ya existe";
-            exit();
-        }
-
-        $sql = "INSERT INTO businesses (name)
-                VALUES (:name)";
-
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
-
-        header('Location: ../../views/settings/settings.php');
-
-        exit();
-    } catch(PDOException $e) {
-
-        echo "Error: " . $e->getMessage();
-    }
+    exit;
 }
 
+try {
+
+    $name = strtoupper(
+        trim($_POST['name'])
+    );
+
+    if (empty($name)) {
+
+        throw new Exception(
+            'Nombre inválido.'
+        );
+    }
+
+    if (
+        businessExists(
+            $conexion,
+            $name
+        )
+    ) {
+
+        throw new Exception(
+            'El negocio ya existe.'
+        );
+    }
+
+    createBusiness(
+        $conexion,
+        $name
+    );
+
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
+
+    exit;
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error store_business: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al guardar el negocio.'
+    );
+}
 ?>

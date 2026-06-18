@@ -1,41 +1,87 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'EquipmentTypeController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $type = trim($_POST['type']);
-    $type = strtoupper($type);
+try {
 
-    try {
-        $sql = "UPDATE equipments_types
-                SET type = :type
-                WHERE id = :id";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        $id = (int) $_POST['id'];
 
-        header('Location: ../../views/settings/settings.php');
+        $type = strtoupper(
+            trim($_POST['type'])
+        );
 
-        exit();
-    } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        if (
+            $id <= 0 ||
+            empty($type)
+        ) {
+
+            throw new Exception(
+                'Datos inválidos.'
+            );
+        }
+
+        if (
+            equipmentTypeExistsForAnotherId(
+                $conexion,
+                $type,
+                $id
+            )
+        ) {
+
+            throw new Exception(
+                'Ya existe un tipo con ese nombre.'
+            );
+        }
+
+        updateEquipmentType(
+            $conexion,
+            $id,
+            $type
+        );
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
     }
-}
 
-if(isset($_GET['id'])) {
-    $id = $_GET['id'];
-    
-    $sql = "SELECT * 
-            FROM equipments_types
-            WHERE id = :id";
-    
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    $equipment_type = $stmt->fetch();
+    if (!isset($_GET['id'])) {
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
+    }
+
+    $id = (int) $_GET['id'];
+
+    $equipment_type = getEquipmentTypeById(
+        $conexion,
+        $id
+    );
+
+    if (!$equipment_type) {
+
+        throw new Exception(
+            'Tipo inexistente.'
+        );
+    }
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error edit_equipment_type: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al cargar el tipo.'
+    );
 }
 ?>
 

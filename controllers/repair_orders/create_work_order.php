@@ -65,7 +65,7 @@ $stmt->execute([
     ':work_description' => $_POST['work_description'],
     ':work_order_number' => $_POST['work_order_number'],
     ':file' => $file_name,
-    ':created_by' => $_SESSION['id'] ?? null
+    ':created_by' => $_SESSION['user_id'] ?? null
 
 ]);
 

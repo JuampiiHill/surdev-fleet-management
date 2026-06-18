@@ -389,6 +389,48 @@ TABS EQUIPO
 }
 
 /* =========================================
+SEGUNDA FILA
+========================================= */
+
+.second-row-grid{
+    display:grid;
+    grid-template-columns:2.8fr 1.2fr;
+    gap:5px;
+    align-items:stretch;
+}
+
+.costs-card .cost-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #eef2f7;
+}
+
+.costs-card .cost-row span{
+    color:#64748b;
+    font-size:13px;
+}
+
+.costs-card .cost-row strong{
+    color:#111827;
+    font-size:13px;
+    font-weight:600;
+}
+
+.cost-total{
+    margin-top:15px;
+    padding-top:15px;
+    border-top:2px solid #e5e7eb;
+}
+
+.cost-total strong{
+    font-size:16px !important;
+}
+
+/* =========================================
 RESPONSIVE
 ========================================= */
 

@@ -1,24 +1,47 @@
 <?php
 
-    //---------ELIMINAR TIPO DE EQUIPOS (AUTOELEVADORES ETC.) ---------
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'EquipmentTypeController.php';
 
-if(isset($_GET['id'])) {
-    $id = $_GET['id'];
+try {
 
-    try {
-        $sql = "DELETE FROM equipments_types
-                WHERE id = :id";
+    if (!isset($_GET['id'])) {
 
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
 
-        header('Location: ../../views/settings/settings.php');
-        exit();
-    } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        exit;
     }
-}
 
-?>
+    $id = (int) $_GET['id'];
+
+    if ($id <= 0) {
+
+        throw new Exception(
+            'ID inválido.'
+        );
+    }
+
+    deleteEquipmentType(
+        $conexion,
+        $id
+    );
+
+    header(
+        'Location: ../../views/settings/settings.php'
+    );
+
+    exit;
+
+} catch (Exception $e) {
+
+    error_log(
+        'Error delete_equipment_type: '
+        . $e->getMessage()
+    );
+
+    die(
+        'Ocurrió un error al eliminar el tipo.'
+    );
+}

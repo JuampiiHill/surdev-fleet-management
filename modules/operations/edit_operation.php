@@ -1,41 +1,84 @@
 <?php
 
-require_once '../../config/database.php';
+require_once '../../middleware/auth.php';
+require_once 'OperationController.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $name = trim($_POST['name']);
-    $name = strtoupper($name);
+try {
 
-    try {
-        $sql = "UPDATE operations
-                SET name = :name
-                WHERE id = :id";
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        $id = (int) $_POST['id'];
 
-        header('Location: ../../views/settings/settings.php');
+        $name = strtoupper(
+            trim($_POST['name'])
+        );
 
-        exit();
-    } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+        if (
+            $id <= 0 ||
+            empty($name)
+        ) {
+
+            throw new Exception(
+                'Datos inválidos.'
+            );
+        }
+
+        if (
+            operationExistsForAnotherId(
+                $conexion,
+                $name,
+                $id
+            )
+        ) {
+
+            throw new Exception(
+                'Ya existe una operación con ese nombre.'
+            );
+        }
+
+        updateOperation(
+            $conexion,
+            $id,
+            $name
+        );
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
     }
-}
 
-if(isset($_GET['id'])) {
-    $id = $_GET['id'];
-    
-    $sql = "SELECT * 
-            FROM operations
-            WHERE id = :id";
-    
-    $stmt = $conexion->prepare($sql);
-    $stmt->bindParam(':id', $id);
-    $stmt->execute();
-    $operation = $stmt->fetch();
+    if (!isset($_GET['id'])) {
+
+        header(
+            'Location: ../../views/settings/settings.php'
+        );
+
+        exit;
+    }
+
+    $id = (int) $_GET['id'];
+
+    $operation = getOperationById(
+        $conexion,
+        $id
+    );
+
+    if (!$operation) {
+
+        throw new Exception(
+            'Operación inexistente.'
+        );
+    }
+} catch (Exception $e) {
+
+    error_log(
+        'Error edit_operation: '
+            . $e->getMessage()
+    );
+
+    die('Ocurrió un error al cargar la operación.');
 }
 ?>
 
@@ -49,45 +92,47 @@ if(isset($_GET['id'])) {
     <title>Editar operación</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+        rel="stylesheet">
 
 </head>
+
 <body class="bg-light">
-<div class="container py-5">
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-4">
+    <div class="container py-5">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body p-4">
 
-            <h3 class="mb-4">
-                Editar operacion
-            </h3>
+                <h3 class="mb-4">
+                    Editar operacion
+                </h3>
 
-            <form method="POST">
-                <input type="hidden"
-                       name="id"
-                       value="<?php echo $operation['id']; ?>">
-                <div class="mb-3">
-                    <label class="form-label">
-                        Nombre
-                    </label>
+                <form method="POST">
+                    <input type="hidden"
+                        name="id"
+                        value="<?php echo $operation['id']; ?>">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Nombre
+                        </label>
 
-                    <input type="text"
-                           name="name"
-                           class="form-control"
-                           value="<?php echo $operation['name']; ?>"
-                           required>
-                </div>
+                        <input type="text"
+                            name="name"
+                            class="form-control"
+                            value="<?php echo $operation['name']; ?>"
+                            required>
+                    </div>
 
-                <button class="btn btn-primary">
-                    Guardar cambios
-                </button>
+                    <button class="btn btn-primary">
+                        Guardar cambios
+                    </button>
 
-                <a href="../../views/settings/settings.php"
-                   class="btn btn-secondary">
-                    Volver
-                </a>
-            </form>
+                    <a href="../../views/settings/settings.php"
+                        class="btn btn-secondary">
+                        Volver
+                    </a>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 </body>
+
 </html>
