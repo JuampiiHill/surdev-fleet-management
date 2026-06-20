@@ -62,6 +62,7 @@ GENERAR NUMERO OR
 $sql_last = "
     SELECT id
     FROM repair_orders
+    WHERE deleted_at IS NULL
     ORDER BY id DESC
     LIMIT 1
 ";

@@ -30,6 +30,5 @@ include '../../partials/layout/app_header.php';
 <?php include '../../partials/settings/modals/modal_operation.php'; ?>
 <?php include '../../partials/settings/modals/modal_site.php'; ?>
 <?php include '../../partials/settings/modals/modal_provider.php'; ?>
-<?php include '../../partials/settings/modals/modal_equipment.php'; ?>
 
 <?php include '../../partials/layout/app_footer.php'; ?>

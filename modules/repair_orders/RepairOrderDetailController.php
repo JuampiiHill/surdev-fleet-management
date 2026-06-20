@@ -18,22 +18,21 @@ try {
 
     $sql = "
 
-        SELECT
+    SELECT
+        ro.*,
+        e.internal_number,
+        e.brand,
+        e.model
 
-            ro.*,
+    FROM repair_orders ro
 
-            e.internal_number,
-            e.brand,
-            e.model
+    INNER JOIN equipments e
+        ON ro.equipment_id = e.id
 
-        FROM repair_orders ro
+    WHERE ro.id = :id
+    AND ro.deleted_at IS NULL
 
-        INNER JOIN equipments e
-            ON ro.equipment_id = e.id
-
-        WHERE ro.id = :id
-
-    ";
+";
 
     $stmt = $conexion->prepare($sql);
 
@@ -57,7 +56,8 @@ try {
         FROM repair_work_orders
 
         WHERE repair_order_id = :repair_order_id
-
+        AND deleted_at IS NULL
+        
         ORDER BY work_date ASC,
                  id ASC
 
@@ -78,11 +78,12 @@ try {
     $sql_quotes = "
 
         SELECT *
-        FROM repair_quotes
+FROM repair_quotes
 
-        WHERE repair_order_id = :repair_order_id
+WHERE repair_order_id = :repair_order_id
+AND deleted_at IS NULL
 
-        ORDER BY quote_date DESC
+ORDER BY quote_date DESC
 
     ";
 
@@ -100,14 +101,15 @@ try {
 
     $sql_invoices = "
 
-        SELECT *
-        FROM repair_invoices
+    SELECT *
+    FROM repair_invoices
 
-        WHERE repair_order_id = :repair_order_id
+    WHERE repair_order_id = :repair_order_id
+    AND deleted_at IS NULL
 
-        ORDER BY invoice_date DESC
+    ORDER BY invoice_date DESC
 
-    ";
+";
 
     $stmt_invoices =
         $conexion->prepare($sql_invoices);

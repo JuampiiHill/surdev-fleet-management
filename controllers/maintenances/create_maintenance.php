@@ -1,169 +1,207 @@
 <?php
 
-session_start();
-
+require_once '../../middleware/auth.php';
 require_once '../../config/database.php';
+require_once '../../helpers/EquipmentHourmeterHelper.php';
 
-if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    exit;
-}
+try {
 
-$equipment_id = $_POST['equipment_id'];
-$maintenance_date = $_POST['maintenance_date'];
-$hourmeter = $_POST['hourmeter'];
-$observations = trim($_POST['observations']);
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
-/*==================================
-VALIDAR HOROMETRO
-==================================*/
+        throw new Exception(
+            'Método inválido.'
+        );
+    }
 
-$sql_equipment = "
-    SELECT current_hourmeter
-    FROM equipments
-    WHERE id = :equipment_id
-";
+    $equipment_id =
+        (int) ($_POST['equipment_id'] ?? 0);
 
-$stmt_equipment = $conexion->prepare($sql_equipment);
+    $maintenance_date =
+        $_POST['maintenance_date'] ?? '';
 
-$stmt_equipment->execute([
-    ':equipment_id' => $equipment_id
-]);
+    $hourmeter =
+        (float) ($_POST['hourmeter'] ?? 0);
 
-$equipment = $stmt_equipment->fetch();
+    $observations =
+        trim($_POST['observations'] ?? '');
 
-if(!$equipment){
+    if (
+        $equipment_id <= 0 ||
+        empty($maintenance_date) ||
+        $hourmeter < 0
+    ) {
 
-    die('Equipo inexistente');
-}
+        throw new Exception(
+            'Datos inválidos.'
+        );
+    }
 
-if($hourmeter < $equipment['current_hourmeter']){
+    $sql_equipment = "
+        SELECT current_hourmeter
+        FROM equipments
+        WHERE id = :equipment_id
+    ";
 
-    die(
-        'El horómetro del mantenimiento no puede ser menor al horómetro actual del equipo.'
-    );
-}
+    $stmt_equipment =
+        $conexion->prepare($sql_equipment);
 
-$sql_last = "
-    SELECT hourmeter
-    FROM equipment_maintenances
-    WHERE equipment_id = :equipment_id
-    ORDER BY maintenance_date DESC, id DESC
-    LIMIT 1
-";
+    $stmt_equipment->execute([
+        ':equipment_id' => $equipment_id
+    ]);
 
-$stmt_last = $conexion->prepare($sql_last);
+    $equipment =
+        $stmt_equipment->fetch();
 
-$stmt_last->execute([
-    ':equipment_id' => $equipment_id
-]);
+    if (!$equipment) {
 
-$last_maintenance = $stmt_last->fetch();
+        throw new Exception(
+            'Equipo inexistente.'
+        );
+    }
 
-if(
-    $last_maintenance &&
-    $hourmeter <= $last_maintenance['hourmeter']
-){
+    $sql_last = "
+        SELECT hourmeter
+        FROM equipment_maintenances
+        WHERE equipment_id = :equipment_id
+        AND deleted_at IS NULL
+        ORDER BY maintenance_date DESC, id DESC
+        LIMIT 1
+    ";
 
-    die(
-        'El horómetro debe ser mayor al del último mantenimiento registrado.'
-    );
-}
+    $stmt_last =
+        $conexion->prepare($sql_last);
 
-$file_name = null;
+    $stmt_last->execute([
+        ':equipment_id' => $equipment_id
+    ]);
 
-/*==================================
-SUBIR ARCHIVO
-==================================*/
+    $last_maintenance =
+        $stmt_last->fetch();
 
-if(
-    isset($_FILES['file'])
-    &&
-    $_FILES['file']['error'] == 0
-){
+    if (
+        $last_maintenance &&
+        $hourmeter <= (float) $last_maintenance['hourmeter']
+    ) {
 
-    $extension = strtolower(
-        pathinfo(
-            $_FILES['file']['name'],
-            PATHINFO_EXTENSION
-        )
-    );
+        throw new Exception(
+            'El horómetro debe ser mayor al del último mantenimiento registrado.'
+        );
+    }
 
-    $allowed = [
-        'pdf',
-        'jpg',
-        'jpeg',
-        'png'
-    ];
+    $file_name = null;
 
-    if(in_array($extension,$allowed)){
+    if (
+        isset($_FILES['file']) &&
+        $_FILES['file']['error'] === 0
+    ) {
+
+        $extension =
+            strtolower(
+                pathinfo(
+                    $_FILES['file']['name'],
+                    PATHINFO_EXTENSION
+                )
+            );
+
+        $allowed = [
+            'pdf',
+            'jpg',
+            'jpeg',
+            'png'
+        ];
+
+        if (!in_array($extension, $allowed)) {
+
+            throw new Exception(
+                'Formato de archivo no permitido.'
+            );
+        }
+
+        $upload_dir =
+            '../../assets/uploads/maintenances/';
+
+        if (!is_dir($upload_dir)) {
+
+            mkdir(
+                $upload_dir,
+                0755,
+                true
+            );
+        }
 
         $file_name =
-            uniqid() .
+            uniqid('maintenance_') .
             '.' .
             $extension;
 
-        move_uploaded_file(
-            $_FILES['file']['tmp_name'],
-            '../../assets/uploads/maintenances/' .
-            $file_name
+        if (
+            !move_uploaded_file(
+                $_FILES['file']['tmp_name'],
+                $upload_dir . $file_name
+            )
+        ) {
+
+            throw new Exception(
+                'No se pudo subir el archivo.'
+            );
+        }
+    }
+
+    $sql = "
+        INSERT INTO equipment_maintenances
+        (
+            equipment_id,
+            maintenance_date,
+            hourmeter,
+            file,
+            observations
+        )
+        VALUES
+        (
+            :equipment_id,
+            :maintenance_date,
+            :hourmeter,
+            :file,
+            :observations
+        )
+    ";
+
+    $stmt =
+        $conexion->prepare($sql);
+
+    $result =
+        $stmt->execute([
+            ':equipment_id' => $equipment_id,
+            ':maintenance_date' => $maintenance_date,
+            ':hourmeter' => $hourmeter,
+            ':file' => $file_name,
+            ':observations' => $observations
+        ]);
+
+    if (!$result) {
+
+        throw new Exception(
+            'No se pudo registrar el preventivo.'
         );
     }
+
+    recalculateEquipmentHourmeter(
+        $conexion,
+        $equipment_id
+    );
+
+    header(
+        'Location: ../../views/equipments/equipment_detail.php?id=' .
+            $equipment_id
+    );
+
+    exit;
+} catch (Exception $e) {
+
+    error_log(
+        'Error create_maintenance: ' .
+            $e->getMessage()
+    );
+
+    die($e->getMessage());
 }
-
-/*==================================
-INSERT
-==================================*/
-
-$sql = "
-    INSERT INTO equipment_maintenances
-    (
-        equipment_id,
-        maintenance_date,
-        hourmeter,
-        file,
-        observations
-    )
-    VALUES
-    (
-        :equipment_id,
-        :maintenance_date,
-        :hourmeter,
-        :file,
-        :observations
-    )
-";
-
-$stmt = $conexion->prepare($sql);
-
-$stmt->execute([
-    ':equipment_id' => $equipment_id,
-    ':maintenance_date' => $maintenance_date,
-    ':hourmeter' => $hourmeter,
-    ':file' => $file_name,
-    ':observations' => $observations
-]);
-
-/*==================================
-ACTUALIZAR HOROMETRO DEL EQUIPO
-==================================*/
-
-$sql_update = "
-    UPDATE equipments
-    SET current_hourmeter = :hourmeter
-    WHERE id = :equipment_id
-      AND current_hourmeter < :hourmeter
-";
-
-$stmt_update = $conexion->prepare($sql_update);
-
-$stmt_update->execute([
-    ':hourmeter' => $hourmeter,
-    ':equipment_id' => $equipment_id
-]);
-
-header(
-    'Location: ../../views/equipments/equipment_detail.php?id=' .
-    $equipment_id
-);
-
-exit;

@@ -14,7 +14,7 @@
                 <i class="bi bi-grid"></i>
                 Dashboard
             </a>
-        </li>
+        <!-- </li>
 
         <li>
             <a href="#">
@@ -42,12 +42,13 @@
                 <i class="bi bi-people"></i>
                 Proveedores
             </a>
-        </li>
+        </li> -->
 
         <li>
-            <a href="#">
+            <a href="../../views/repair_orders/repair_orders.php"
+                class="<?php echo ($current_page == 'repair_orders.php') ? 'active' : ''; ?>">
                 <i class="bi bi-clipboard-check"></i>
-                Ordenes
+                    Órdenes
             </a>
         </li>
 
@@ -60,8 +61,9 @@
         </li>
 
         <li>
-            <a href="../settings/settings.php">
-                <i class="bi bi-gear"></i>
+            <a href="../../views/settings/settings.php"
+                class="<?php echo ($current_page == 'settings.php') ? 'active' : ''; ?>">
+            <i class="bi bi-gear"></i>
                 Configuraciones
             </a>
         </li>

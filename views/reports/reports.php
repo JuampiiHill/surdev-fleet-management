@@ -18,14 +18,6 @@ include '../../partials/layout/app_header.php';
 
     <?php include '../../partials/reports/billing_summary.php'; ?>
 
-    <div class="row mt-4">
-
-        <?php include '../../partials/reports/billing_by_operation.php'; ?>
-
-        <?php include '../../partials/reports/billing_by_business.php'; ?>
-
-    </div>
-
     <?php include '../../partials/reports/billing_equipment_detail.php'; ?>
 
 </div>

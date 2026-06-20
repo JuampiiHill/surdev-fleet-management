@@ -15,7 +15,7 @@
             <h5>Presupuestos</h5>
 
             <?php if (count($quotes) > 0): ?>
-
+                
                 <?php foreach ($quotes as $quote): ?>
 
                     <div class="border rounded p-2 mb-2">
@@ -41,6 +41,24 @@
                                 ',',
                                 '.'
                             ); ?>
+
+                        <div class="mt-2 mb-2">
+
+                            <button
+                                class="btn btn-sm btn-outline-warning"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editQuoteModal<?php echo $quote['id']; ?>">
+                                Editar
+                            </button>
+
+                            <button
+                                class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteQuoteModal<?php echo $quote['id']; ?>">
+                                Eliminar
+                            </button>
+
+                        </div>
 
                         <div class="mt-2">
 
@@ -69,6 +87,9 @@
                         </div>
 
                     </div>
+
+                   <?php include 'economic_section/edit_quote_modal.php'; ?>
+    <?php include 'economic_section/delete_quote_modal.php'; ?>
 
                 <?php endforeach; ?>
 
@@ -112,9 +133,9 @@
                                 '.'
                             ); ?>
 
-                        <?php if (!empty($invoice['file'])): ?>
+                        <div class="mt-2 d-flex gap-2 flex-wrap">
 
-                            <div class="mt-2">
+                            <?php if (!empty($invoice['file'])): ?>
 
                                 <a
                                     href="../../assets/uploads/repair_invoices/<?php echo $invoice['file']; ?>"
@@ -123,9 +144,219 @@
                                     Ver Factura
                                 </a>
 
+                            <?php endif; ?>
+
+                            <button
+                                class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editInvoiceModal<?php echo $invoice['id']; ?>">
+                                Editar
+                            </button>
+
+                            <button
+                                class="btn btn-sm btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteInvoiceModal<?php echo $invoice['id']; ?>">
+                                Eliminar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="modal fade"
+                        id="editInvoiceModal<?php echo $invoice['id']; ?>"
+                        tabindex="-1">
+
+                        <div class="modal-dialog">
+
+                            <div class="modal-content">
+
+                                <form
+                                    action="../../controllers/repair_invoices/update_invoice.php"
+                                    method="POST">
+
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value="<?php echo $invoice['id']; ?>">
+
+                                    <input
+                                        type="hidden"
+                                        name="repair_order_id"
+                                        value="<?php echo $repair_order['id']; ?>">
+
+                                    <div class="modal-header">
+
+                                        <h5 class="modal-title">
+                                            Editar factura
+                                        </h5>
+
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal">
+                                        </button>
+
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <div class="mb-3">
+
+                                            <label class="form-label">
+                                                Número de factura
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                name="invoice_number"
+                                                class="form-control"
+                                                value="<?php echo $invoice['invoice_number']; ?>"
+                                                required>
+
+                                        </div>
+
+                                        <div class="mb-3">
+
+                                            <label class="form-label">
+                                                Fecha
+                                            </label>
+
+                                            <input
+                                                type="date"
+                                                name="invoice_date"
+                                                class="form-control"
+                                                value="<?php echo $invoice['invoice_date']; ?>"
+                                                required>
+
+                                        </div>
+
+                                        <div class="mb-3">
+
+                                            <label class="form-label">
+                                                Monto
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                name="amount"
+                                                class="form-control"
+                                                value="<?php echo $invoice['amount']; ?>"
+                                                required>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                            Cancelar
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary">
+                                            Guardar cambios
+                                        </button>
+
+                                    </div>
+
+                                </form>
+
                             </div>
 
-                        <?php endif; ?>
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="modal fade"
+                        id="deleteInvoiceModal<?php echo $invoice['id']; ?>"
+                        tabindex="-1">
+
+                        <div class="modal-dialog">
+
+                            <div class="modal-content">
+
+                                <form
+                                    action="../../controllers/repair_invoices/delete_invoice.php"
+                                    method="POST">
+
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value="<?php echo $invoice['id']; ?>">
+
+                                    <input
+                                        type="hidden"
+                                        name="repair_order_id"
+                                        value="<?php echo $repair_order['id']; ?>">
+
+                                    <div class="modal-header">
+
+                                        <h5 class="modal-title">
+                                            Eliminar factura
+                                        </h5>
+
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal">
+                                        </button>
+
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <p>
+                                            Esta acción no borra la factura físicamente, pero la excluye de la OR y de los reportes de facturación.
+                                        </p>
+
+                                        <div class="mb-3">
+
+                                            <label class="form-label">
+                                                Motivo de eliminación
+                                            </label>
+
+                                            <textarea
+                                                name="delete_reason"
+                                                class="form-control"
+                                                rows="3"
+                                                required></textarea>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                            Cancelar
+                                        </button>
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger">
+                                            Eliminar
+                                        </button>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </div>
 
                     </div>
 

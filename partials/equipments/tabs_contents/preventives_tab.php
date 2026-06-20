@@ -1,100 +1,304 @@
 <div
-                        class="tab-pane fade"
-                        id="preventive-tab">
+    class="tab-pane fade"
+    id="preventive-tab">
 
-                        <?php if (count($preventives) > 0): ?>
+    <?php if (count($preventives) > 0): ?>
 
-                            <div class="table-responsive">
+        <div class="table-responsive">
 
-                                <table class="table">
+            <table class="table">
 
-                                    <thead>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Horómetro</th>
+                        <th>Observaciones</th>
+                        <th>Archivo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
 
-                                        <tr>
+                <tbody>
 
-                                            <th>Fecha</th>
-                                            <th>Horómetro</th>
-                                            <th>Observaciones</th>
-                                            <th></th>
+                    <?php foreach ($preventives as $pm): ?>
 
-                                        </tr>
+                        <tr>
+                            <td>
+                                <?php echo date(
+                                    'd/m/Y',
+                                    strtotime($pm['maintenance_date'])
+                                ); ?>
+                            </td>
 
-                                    </thead>
+                            <td>
+                                <?php echo number_format(
+                                    $pm['hourmeter'],
+                                    0,
+                                    ',',
+                                    '.'
+                                ); ?>
+                                hs
+                            </td>
 
-                                    <tbody>
+                            <td>
+                                <?php echo mb_strimwidth(
+                                    $pm['observations'] ?? '',
+                                    0,
+                                    80,
+                                    '...'
+                                ); ?>
+                            </td>
 
-                                        <?php foreach ($preventives as $pm): ?>
+                            <td>
+                                <?php if (!empty($pm['file'])): ?>
 
-                                            <tr>
+                                    <a
+                                        href="../../assets/uploads/maintenances/<?php echo $pm['file']; ?>"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-success">
+                                        Ver PDF
+                                    </a>
 
-                                                <td>
+                                <?php else: ?>
 
-                                                    <?php echo date(
-                                                        'd/m/Y',
-                                                        strtotime($pm['maintenance_date'])
-                                                    ); ?>
+                                    <span class="text-muted">-</span>
 
-                                                </td>
+                                <?php endif; ?>
+                            </td>
 
-                                                <td>
+                            <td>
+                                <button
+                                    class="btn btn-sm btn-outline-warning"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editPreventiveModal<?php echo $pm['id']; ?>">
+                                    Editar
+                                </button>
 
-                                                    <?php echo number_format(
-                                                        $pm['hourmeter'],
-                                                        0,
-                                                        ',',
-                                                        '.'
-                                                    ); ?>
+                                <button
+                                    class="btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deletePreventiveModal<?php echo $pm['id']; ?>">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
 
-                                                    hs
+                        <div
+                            class="modal fade"
+                            id="editPreventiveModal<?php echo $pm['id']; ?>"
+                            tabindex="-1">
 
-                                                </td>
+                            <div class="modal-dialog modal-lg">
 
-                                                <td>
+                                <div class="modal-content">
 
-                                                    <?php echo mb_strimwidth(
-                                                        $pm['observations'],
-                                                        0,
-                                                        80,
-                                                        '...'
-                                                    ); ?>
+                                    <form
+                                        action="../../controllers/preventives/update_preventive.php"
+                                        method="POST">
 
-                                                </td>
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="<?php echo $pm['id']; ?>">
 
-                                                <td>
+                                        <input
+                                            type="hidden"
+                                            name="equipment_id"
+                                            value="<?php echo $equipment['id']; ?>">
 
-                                                    <?php if (!empty($pm['file'])): ?>
+                                        <div class="modal-header">
 
-                                                        <a
-                                                            href="../../assets/uploads/maintenances/<?php echo $pm['file']; ?>"
-                                                            target="_blank"
-                                                            class="btn btn-sm btn-outline-success">
-                                                            Ver PDF
-                                                        </a>
+                                            <h5 class="modal-title">
+                                                Editar preventivo
+                                            </h5>
 
-                                                    <?php endif; ?>
+                                            <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal">
+                                            </button>
 
-                                                </td>
+                                        </div>
 
-                                            </tr>
+                                        <div class="modal-body">
 
-                                        <?php endforeach; ?>
+                                            <div class="row">
 
-                                    </tbody>
+                                                <div class="col-md-6 mb-3">
 
-                                </table>
+                                                    <label class="form-label">
+                                                        Fecha
+                                                    </label>
+
+                                                    <input
+                                                        type="date"
+                                                        name="maintenance_date"
+                                                        class="form-control"
+                                                        value="<?php echo $pm['maintenance_date']; ?>"
+                                                        required>
+
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+
+                                                    <label class="form-label">
+                                                        Horómetro
+                                                    </label>
+
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        name="hourmeter"
+                                                        class="form-control"
+                                                        value="<?php echo $pm['hourmeter']; ?>"
+                                                        required>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label">
+                                                    Observaciones
+                                                </label>
+
+                                                <textarea
+                                                    name="observations"
+                                                    class="form-control"
+                                                    rows="4"><?php echo $pm['observations'] ?? ''; ?></textarea>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-dismiss="modal">
+                                                Cancelar
+                                            </button>
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-primary">
+                                                Guardar cambios
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
 
                             </div>
 
-                        <?php else: ?>
+                        </div>
 
-                            <div class="empty-state">
+                        <div
+                            class="modal fade"
+                            id="deletePreventiveModal<?php echo $pm['id']; ?>"
+                            tabindex="-1">
 
-                                <h5>
-                                    No existen mantenimientos preventivos registrados
-                                </h5>
+                            <div class="modal-dialog">
+
+                                <div class="modal-content">
+
+                                    <form
+                                        action="../../controllers/preventives/delete_preventive.php"
+                                        method="POST">
+
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="<?php echo $pm['id']; ?>">
+
+                                        <input
+                                            type="hidden"
+                                            name="equipment_id"
+                                            value="<?php echo $equipment['id']; ?>">
+
+                                        <div class="modal-header">
+
+                                            <h5 class="modal-title">
+                                                Eliminar preventivo
+                                            </h5>
+
+                                            <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal">
+                                            </button>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <p>
+                                                Esta acción no borra el registro físicamente, pero lo excluye del historial y del cálculo del próximo mantenimiento.
+                                            </p>
+
+                                            <div class="mb-3">
+
+                                                <label class="form-label">
+                                                    Motivo de eliminación
+                                                </label>
+
+                                                <textarea
+                                                    name="delete_reason"
+                                                    class="form-control"
+                                                    rows="3"
+                                                    required></textarea>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-dismiss="modal">
+                                                Cancelar
+                                            </button>
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-danger">
+                                                Eliminar
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+
+                                </div>
 
                             </div>
 
-                        <?php endif; ?>
+                        </div>
 
-                    </div>
+                    <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    <?php else: ?>
+
+        <div class="empty-state">
+
+            <h5>
+                No existen mantenimientos preventivos registrados
+            </h5>
+
+        </div>
+
+    <?php endif; ?>
+
+</div>

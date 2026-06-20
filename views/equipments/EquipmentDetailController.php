@@ -80,6 +80,7 @@ $sql_last_maintenance = "
     SELECT *
     FROM equipment_maintenances
     WHERE equipment_id = :equipment_id
+    AND deleted_at IS NULL
     ORDER BY maintenance_date DESC, id DESC
     LIMIT 1
 ";
@@ -115,6 +116,10 @@ $proximo_mantenimiento =
 $horas_consumidas =
     $horometro_actual -
     $ultimo_mantenimiento_hs;
+
+if ($horas_consumidas < 0) {
+    $horas_consumidas = 0;
+}
 
 $horas_restantes =
     $proximo_mantenimiento -
@@ -199,6 +204,7 @@ $sql_repair_orders = "
     SELECT *
     FROM repair_orders
     WHERE equipment_id = :equipment_id
+    AND deleted_at IS NULL
     ORDER BY report_date DESC
 ";
 
@@ -224,6 +230,8 @@ $sql_work_orders = "
         ON rwo.repair_order_id = ro.id
 
     WHERE ro.equipment_id = :equipment_id
+    AND rwo.deleted_at IS NULL
+    AND ro.deleted_at IS NULL
 
     ORDER BY rwo.work_date DESC
 
@@ -244,6 +252,7 @@ $sql_preventives = "
     SELECT *
     FROM equipment_maintenances
     WHERE equipment_id = :equipment_id
+    AND deleted_at IS NULL
     ORDER BY maintenance_date DESC
 
 ";
@@ -263,6 +272,7 @@ $sql_downtimes = "
     SELECT *
     FROM equipment_downtimes
     WHERE equipment_id = :equipment_id
+    AND deleted_at IS NULL
     ORDER BY start_date DESC
 
 ";
@@ -288,6 +298,7 @@ SELECT
 FROM equipment_costs
 
 WHERE equipment_id = :equipment_id
+AND deleted_at IS NULL
 AND MONTH(cost_date) = MONTH(CURDATE())
 AND YEAR(cost_date) = YEAR(CURDATE())
 
@@ -318,6 +329,7 @@ SELECT
 FROM equipment_downtimes
 
 WHERE equipment_id = :equipment_id
+AND deleted_at IS NULL
 AND MONTH(start_date) = MONTH(CURDATE())
 AND YEAR(start_date) = YEAR(CURDATE())
 
@@ -347,6 +359,7 @@ INNER JOIN repair_orders ro
     ON ri.repair_order_id = ro.id
 
 WHERE ro.equipment_id = :equipment_id
+AND ri.deleted_at IS NULL
 AND MONTH(ri.invoice_date) = MONTH(CURDATE())
 AND YEAR(ri.invoice_date) = YEAR(CURDATE())
 
@@ -386,6 +399,7 @@ SELECT *
 FROM equipment_costs
 
 WHERE equipment_id = :equipment_id
+AND deleted_at IS NULL
 
 ORDER BY cost_date DESC
 
