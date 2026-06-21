@@ -274,4 +274,94 @@ $stmt_op->execute();
 
 $operations = $stmt_op->fetchAll();
 
+$sql_equipment_types = "
+    SELECT id, type
+    FROM equipments_types
+    ORDER BY type ASC
+";
+
+$stmt_equipment_types =
+    $conexion->prepare($sql_equipment_types);
+
+$stmt_equipment_types->execute();
+
+$equipment_types =
+    $stmt_equipment_types->fetchAll();
+
+
+$sql_statuses = "
+    SELECT id, name
+    FROM equipment_statuses
+    ORDER BY name ASC
+";
+
+$stmt_statuses =
+    $conexion->prepare($sql_statuses);
+
+$stmt_statuses->execute();
+
+$statuses =
+    $stmt_statuses->fetchAll();
+
+/* DATOS PARA MODAL NUEVO EQUIPO */
+
+$sql_equipment_types = "
+    SELECT id, type
+    FROM equipments_types
+    ORDER BY type ASC
+";
+
+$stmt_equipment_types =
+    $conexion->prepare($sql_equipment_types);
+
+$stmt_equipment_types->execute();
+
+$equipment_types =
+    $stmt_equipment_types->fetchAll();
+
+
+$sql_operations = "
+    SELECT id, name
+    FROM operations
+    ORDER BY name ASC
+";
+
+$stmt_operations =
+    $conexion->prepare($sql_operations);
+
+$stmt_operations->execute();
+
+$operations =
+    $stmt_operations->fetchAll();
+
+
+$sql_providers = "
+    SELECT id, name
+    FROM providers
+    ORDER BY name ASC
+";
+
+$stmt_providers =
+    $conexion->prepare($sql_providers);
+
+$stmt_providers->execute();
+
+$providers =
+    $stmt_providers->fetchAll();
+
+
+$sql_statuses = "
+    SELECT id, name
+    FROM equipment_statuses
+    ORDER BY name ASC
+";
+
+$stmt_statuses =
+    $conexion->prepare($sql_statuses);
+
+$stmt_statuses->execute();
+
+$statuses =
+    $stmt_statuses->fetchAll();
+
 ?>
